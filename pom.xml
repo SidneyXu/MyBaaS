@@ -13,6 +13,8 @@
     <module>maxleap-baas-impl</module>
     <module>maxleap-baas-base</module>
     <module>maxleap-baas-cloudcode</module>
+    <module>flow-core</module>
+    <module>flow-server</module>
   </modules>
 
   <properties>
