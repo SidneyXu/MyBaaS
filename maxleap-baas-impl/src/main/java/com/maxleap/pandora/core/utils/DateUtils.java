@@ -10,7 +10,7 @@ import java.util.SimpleTimeZone;
  * @author snekay
  * @since 3.0.0
  */
-public class DateUtils {
+public class  DateUtils {
   private static final DateFormat dateFormat;
 
   static {

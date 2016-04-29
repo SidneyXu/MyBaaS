@@ -15,6 +15,7 @@
     <module>maxleap-baas-cloudcode</module>
     <module>flow-core</module>
     <module>flow-server</module>
+    <module>flow-data</module>
   </modules>
 
   <properties>

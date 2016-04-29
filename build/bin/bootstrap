@@ -2,7 +2,7 @@
 
 white_list=.*login,.*register,location/lang
 
-mongo_url=10.10.10.133
+mongo_url=192.168.1.67
 
 p=$0
 p=${p%/*}
