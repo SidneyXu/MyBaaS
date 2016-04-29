@@ -103,7 +103,7 @@ grunt.initConfig({
 				"Gruntfile.js",
 				"lib/**/*.*",
 				"package.json",
-				"README.md",
+				"foobar.md",
 				"src/**/*.*",
 				"test/**/*.*"
 			]

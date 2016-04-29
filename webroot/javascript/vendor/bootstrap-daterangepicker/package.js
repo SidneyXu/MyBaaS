@@ -3,7 +3,7 @@ Package.describe({
   version: '2.0.6',
   summary: 'Date range picker component for Bootstrap',
   git: 'https://github.com/dangrossman/bootstrap-daterangepicker',
-  documentation: 'README.md'
+  documentation: 'foobar.md'
 });
 
 Package.onUse(function(api) {
