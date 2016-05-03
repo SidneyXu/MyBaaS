@@ -10,6 +10,7 @@ import java.util.function.Consumer;
  * @author sneaky
  * @since 1.0.0
  */
+@Deprecated
 public class Runner {
   private static final String WEB_EXAMPLES_DIR = "maxleap-baas-apiserver";
   private static final String WEB_EXAMPLES_JAVA_DIR = WEB_EXAMPLES_DIR + "/src/main/java/";

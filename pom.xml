@@ -20,22 +20,32 @@
   </modules>
 
   <properties>
+    <!--start-->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <kotlin.version>1.0.1</kotlin.version>
+    <vertx.version>3.2.0</vertx.version>
+    <logback.version>1.1.7</logback.version>
+    <jackson.version>2.7.0</jackson.version>
+    <guice.version>4.0</guice.version>
+    <junit.version>4.11</junit.version>
+    <guava.version>19.0</guava.version>
+    <!--end-->
+
     <maxleap-baas.version>1.0.0</maxleap-baas.version>
     <las-sdk.version>3.2.3</las-sdk.version>
     <las.base.version>3.0.2</las.base.version>
-    <vertx.version>3.2.0</vertx.version>
+
     <vertx.testtools.version>2.0.3-final</vertx.testtools.version>
-    <junit.version>4.11</junit.version>
+
     <mockito.version>1.9.5</mockito.version>
     <jedis.version>2.7.2</jedis.version>
     <mongo.driver.version>3.0.1</mongo.driver.version>
     <rxjava.version>1.0.4</rxjava.version>
     <vertx.mod-redis.version>1.1.4</vertx.mod-redis.version>
-    <guava.version>14.0.1</guava.version>
+
     <slf4j.version>1.7.5</slf4j.version>
-    <guice.version>3.0</guice.version>
-    <jackson.version>2.6.4</jackson.version>
+
+
     <commons.codec.version>1.6</commons.codec.version>
     <metric.version>3.0.2</metric.version>
     <cloudcode.sdk.version>2.4.5</cloudcode.sdk.version>
@@ -59,6 +69,57 @@
 
   <dependencyManagement>
     <dependencies>
+      <!--start-->
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-core</artifactId>
+        <version>${vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-web</artifactId>
+        <version>${vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.vertx</groupId>
+        <artifactId>vertx-rx-java</artifactId>
+        <version>${vertx.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${logback.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-stdlib</artifactId>
+        <version>${kotlin.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.inject</groupId>
+        <artifactId>guice</artifactId>
+        <version>${guice.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!--end-->
+
       <dependency>
         <groupId>com.maxleap</groupId>
         <artifactId>maxleap-baas-impl</artifactId>
@@ -105,11 +166,6 @@
         <version>${javax.ws.rs.version}</version>
       </dependency>
 
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
 
       <dependency>
         <groupId>io.reactivex</groupId>
@@ -124,16 +180,7 @@
       </dependency>
 
       <!-- vertx dependencies-->
-      <dependency>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-core</artifactId>
-        <version>${vertx.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.vertx</groupId>
-        <artifactId>vertx-web</artifactId>
-        <version>${vertx.version}</version>
-      </dependency>
+
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-web-templ-thymeleaf</artifactId>
@@ -156,11 +203,7 @@
       </dependency>
 
       <!--guice dependencies-->
-      <dependency>
-        <groupId>com.google.inject</groupId>
-        <artifactId>guice</artifactId>
-        <version>${guice.version}</version>
-      </dependency>
+
 
       <!--CloudCode dependencies -->
       <dependency>
@@ -180,11 +223,7 @@
       </dependency>
 
       <!--Test dependencies-->
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-      </dependency>
+
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-all</artifactId>
@@ -272,8 +311,48 @@
     </dependency>
   </dependencies>
 
+
   <build>
+    <!--start-->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>kotlin-maven-plugin</artifactId>
+          <groupId>org.jetbrains.kotlin</groupId>
+          <version>${kotlin.version}</version>
+          <executions>
+            <execution>
+              <id>compile</id>
+              <phase>process-sources</phase>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <source>src/main/kotlin</source>
+                </sourceDirs>
+              </configuration>
+            </execution>
+            <execution>
+              <id>test-compile</id>
+              <phase>process-test-sources</phase>
+              <goals>
+                <goal>test-compile</goal>
+              </goals>
+              <configuration>
+                <sourceDirs>
+                  <source>src/test/kotlin</source>
+                </sourceDirs>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <!--end-->
+
     <plugins>
+      <!--start-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -284,6 +363,8 @@
           <encoding>${project.build.sourceEncoding}</encoding>
         </configuration>
       </plugin>
+      <!--end-->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>

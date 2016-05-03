@@ -9,11 +9,11 @@
         </encoder>
     </appender>
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_HOME}/flow.log</file>
+        <file>${LOG_HOME}/flow-test.log</file>
         <!--SizeAndTimeBasedRollingPolicy 兼具rolling 和trigger 功能,在1.1.7以后追加-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>flow.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
+            <fileNamePattern>flow-test.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
         </rollingPolicy>
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -24,7 +24,7 @@
         <appender-ref ref="FILE"/>
     </logger>
     <root>
-        <level value="ERROR"/>
+        <level value="INFO"/>
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
