@@ -9,9 +9,9 @@ import java.util.List;
  */
 public interface BaseDao {
 
-    Observable<String> insert(String database,
-                              String tableName,
-                              BaseEntity entity);
+    String insert(String database,
+                  String tableName,
+                  BaseEntity entity);
 
     BaseEntity update();
 

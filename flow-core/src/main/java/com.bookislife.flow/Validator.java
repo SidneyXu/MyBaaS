@@ -5,6 +5,8 @@ package com.bookislife.flow;
  */
 public class Validator {
 
-    public static void assertNotNull(Object object, String name) {
+    public static void assertNotNull(Object object, String message) {
+        if (null == object)
+            throw new IllegalArgumentException(message);
     }
 }

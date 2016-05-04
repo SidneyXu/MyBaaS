@@ -2,9 +2,9 @@ package com.bookislife.flow.data;
 
 import com.bookislife.flow.Environment;
 import com.bookislife.flow.IOUtils;
+import com.mongodb.MongoClient;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.core.Vertx;
-import io.vertx.rxjava.ext.mongo.MongoClient;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -39,6 +39,10 @@ public class MongoContext {
 
     public MongoClient getClient(String dataSource) {
         JsonObject config = loadConfig(dataSource);
-        return MongoClient.createShared(vertx, config, dataSource);
+        // TODO: 5/4/16
+        return null;
+//        return MongoClient.createShared(vertx, config, dataSource);
     }
+
+
 }

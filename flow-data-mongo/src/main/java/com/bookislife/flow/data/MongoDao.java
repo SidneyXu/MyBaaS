@@ -1,5 +1,6 @@
 package com.bookislife.flow.data;
 
+import com.mongodb.client.MongoCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
@@ -21,11 +22,18 @@ public class MongoDao implements BaseDao {
         this.mongoContext = mongoContext;
     }
 
-    @Override
-    public Observable<String> insert(String database, String tableName, BaseEntity entity) {
-        MongoDocument document = (MongoDocument) entity;
+    private MongoCollection getCollection(String database, String tableName) {
         return mongoContext.getClient(database)
-                .insertObservable(tableName, document.toJsonObject());
+                .getDatabase(database)
+                .getCollection(tableName);
+    }
+
+    @Override
+    public String insert(String database, String tableName, BaseEntity entity) {
+        MongoDocument document = (MongoDocument) entity;
+        getCollection(database, tableName)
+            .insertOne(null);
+        return null;
     }
 
     @Override
