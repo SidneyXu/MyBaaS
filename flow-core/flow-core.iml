@@ -22,6 +22,21 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib:1.0.1" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-runtime:1.0.1" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-core:3.2.0" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.0.33.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.0.33.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.0.33.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-handler:4.0.33.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec:4.0.33.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-codec-http:4.0.33.Final" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.6.1" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-rx-java:3.2.0" level="project" />
+    <orderEntry type="library" name="Maven: io.reactivex:rxjava:1.0.4" level="project" />
+    <orderEntry type="library" name="Maven: io.vertx:vertx-mongo-client:3.2.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-async:3.2.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:bson:3.2.0" level="project" />
+    <orderEntry type="library" name="Maven: org.mongodb:mongodb-driver-core:3.2.0" level="project" />
+    <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.5" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-log4j12:1.7.5" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
@@ -30,17 +45,9 @@
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.7.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.7.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.7.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.11" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: io.vertx:testtools:2.0.3-final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.vertx:vertx-core:3.2.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-common:4.0.33.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-buffer:4.0.33.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-transport:4.0.33.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-handler:4.0.33.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-codec:4.0.33.Final" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.netty:netty-codec-http:4.0.33.Final" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.directory.server:apacheds-protocol-dns:1.5.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.directory.server:apacheds-i18n:1.5.7" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.directory.server:apacheds-core-jndi:1.5.7" level="project" />
@@ -79,7 +86,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: com.google.inject:guice:4.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: javax.inject:javax.inject:1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: aopalliance:aopalliance:1.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.google.guava:guava:19.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.google.inject.extensions:guice-assistedinject:3.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.jayway.restassured:rest-assured:2.3.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.groovy:groovy:2.3.2" level="project" />

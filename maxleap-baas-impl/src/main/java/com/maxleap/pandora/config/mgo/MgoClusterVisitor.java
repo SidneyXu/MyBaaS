@@ -30,6 +30,7 @@ public class MgoClusterVisitor implements ClusterVisitor<MgoCluster> {
     return Funcs.get(clusterName, lock, mgoClusterConcurrentMap, () -> new MgoCluster(clusterName, System.getProperty("mongo.urls", "1.default.mgo.las,3.default.mgo.las"), DataSourceStatus.ENABLE));
   }
 
+  //获得 mongo 地址
   @Override
   public List<MgoCluster> listAll() {
     throw new UnsupportedOperationException("unsupported");

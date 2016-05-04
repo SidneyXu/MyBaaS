@@ -1,5 +1,7 @@
 package com.bookislife.flow.data;
 
+import rx.Observable;
+
 import java.util.List;
 
 /**
@@ -7,11 +9,15 @@ import java.util.List;
  */
 public interface BaseDao {
 
-    BaseEntity insert();
+    Observable<String> insert(String database,
+                              String tableName,
+                              BaseEntity entity);
 
     BaseEntity update();
 
     BaseEntity insertOrUpdate();
+
+    void batchInsert(String database, String tableName, List<BaseEntity> entities);
 
     int delete();
 

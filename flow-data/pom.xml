@@ -11,5 +11,10 @@
 
     <artifactId>flow-data</artifactId>
 
-
+<dependencies>
+    <dependency>
+        <groupId>io.reactivex</groupId>
+        <artifactId>rxjava</artifactId>
+    </dependency>
+</dependencies>
 </project>

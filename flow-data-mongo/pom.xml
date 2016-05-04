@@ -14,11 +14,17 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>2.13.0</version>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-rx-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-mongo-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.maxleap</groupId>
             <artifactId>flow-data</artifactId>
@@ -28,6 +34,11 @@
         <dependency>
             <groupId>com.google.inject</groupId>
             <artifactId>guice</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.bookislife</groupId>
+            <artifactId>flow-core</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 </project>

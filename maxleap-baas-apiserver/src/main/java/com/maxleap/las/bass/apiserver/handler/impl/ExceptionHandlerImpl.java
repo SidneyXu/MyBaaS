@@ -13,6 +13,7 @@ import javax.inject.Singleton;
  * @author sneaky
  * @since 1.0.0
  */
+
 @Singleton
 public class ExceptionHandlerImpl implements ExceptionHandler {
   private final static Logger logger = LoggerFactory.getLogger(ExceptionHandlerImpl.class);
