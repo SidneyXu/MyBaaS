@@ -1,7 +1,5 @@
 package com.bookislife.flow.data;
 
-import rx.Observable;
-
 import java.util.List;
 
 /**
@@ -19,13 +17,19 @@ public interface BaseDao {
 
     void batchInsert(String database, String tableName, List<BaseEntity> entities);
 
-    int delete();
+    int deleteById(String database,
+                   String tableName,
+                   String id);
 
-    BaseEntity findById();
+    BaseEntity findById(String database,
+                        String tableName,
+                        String id);
 
     BaseEntity findOne();
 
     List<BaseEntity> findAll();
 
-    long count();
+    long count(String database,
+               String tableName,
+               BaseQuery query);
 }

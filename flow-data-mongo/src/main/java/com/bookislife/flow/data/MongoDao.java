@@ -1,12 +1,15 @@
 package com.bookislife.flow.data;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.CountOptions;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 
 import javax.inject.Singleton;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by SidneyXu on 2016/05/03.
@@ -30,9 +33,18 @@ public class MongoDao implements BaseDao {
 
     @Override
     public String insert(String database, String tableName, BaseEntity entity) {
-        MongoDocument document = (MongoDocument) entity;
+        MongoDocument mongoDocument = (MongoDocument) entity;
+        Document document=toDocument(mongoDocument);
         getCollection(database, tableName)
-            .insertOne(null);
+            .insertOne(document);
+        return document.getObjectId("_id").toHexString();
+    }
+
+    private Document toDocument(MongoDocument mongoDocument) {
+        return null;
+    }
+
+    private List<Document> toDocuments(List<BaseEntity> mongoDocuments){
         return null;
     }
 
@@ -48,15 +60,18 @@ public class MongoDao implements BaseDao {
 
     @Override
     public void batchInsert(String database, String tableName, List<BaseEntity> entities) {
+        List<Document> documents=toDocuments(entities);
+        getCollection(database, tableName)
+                .insertMany(documents);
     }
 
     @Override
-    public int delete() {
+    public int deleteById(String database, String tableName, String id) {
         return 0;
     }
 
     @Override
-    public BaseEntity findById() {
+    public BaseEntity findById(String database, String tableName, String id) {
         return null;
     }
 
@@ -71,7 +86,8 @@ public class MongoDao implements BaseDao {
     }
 
     @Override
-    public long count() {
+    public long count(String database, String tableName, BaseQuery query) {
         return 0;
     }
+
 }

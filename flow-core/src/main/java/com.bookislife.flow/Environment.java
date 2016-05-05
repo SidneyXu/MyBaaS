@@ -10,4 +10,8 @@ public class Environment {
         String MONGO_CONFIG_PROP_NAME="mongo.config";
     }
 
+    public interface Header{
+        String RESPONSE_TIME="flow-response-time";
+    }
+
 }

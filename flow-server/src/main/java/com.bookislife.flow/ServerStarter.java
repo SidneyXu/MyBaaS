@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.core.AbstractVerticle;
+import io.vertx.rxjava.ext.web.Route;
 import io.vertx.rxjava.ext.web.Router;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +27,16 @@ public class ServerStarter extends AbstractVerticle {
     public void start() throws Exception {
         initConfig();
 
-        Router router=Router.router(vertx);
+        Router router = Router.router(vertx);
+        applyHandler(router);
+    }
 
+    private void applyHandler(Router router) {
+        Route route = router.route();
+        Middleware middleware = injector.getInstance(Middleware.class);
+        route
+                .failureHandler(middleware.getExceptionHandler())
+                .handler(middleware.getExceptionHandler());
     }
 
     private void initConfig() {
@@ -36,7 +45,7 @@ public class ServerStarter extends AbstractVerticle {
                 .put("rest", new JsonObject()
                         .put("host", "127.0.0.1")
                         .put("port", 8080));
-        injector= Guice.createInjector(new ServerModule(vertx,config));
+        injector = Guice.createInjector(new ServerModule(vertx, config));
 
     }
 }
