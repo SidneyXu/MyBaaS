@@ -6,15 +6,18 @@ import com.mongodb.MongoClient;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.core.Vertx;
 
+import javax.inject.Singleton;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by SidneyXu on 2016/05/03.
  */
+@Singleton
 public class MongoContext {
 
     private final Vertx vertx;
     private final JsonObject config;
+
     private ConcurrentHashMap<String, JsonObject> configMap = new ConcurrentHashMap<>();
 
     public MongoContext(Vertx vertx) {
@@ -33,6 +36,7 @@ public class MongoContext {
                 json = IOUtils.loadResource(MongoContext.class,
                         Environment.Config.MONGO_CONFIG_FILE_NAME);
             }
+
             return new JsonObject(json);
         });
     }

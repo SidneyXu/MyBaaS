@@ -44,7 +44,8 @@ public class ServerStarter extends AbstractVerticle {
         config = new JsonObject()
                 .put("rest", new JsonObject()
                         .put("host", "127.0.0.1")
-                        .put("port", 8080));
+                        .put("port", 8080)
+                        .put("dialect", "mongo"));
         injector = Guice.createInjector(new ServerModule(vertx, config));
 
     }
