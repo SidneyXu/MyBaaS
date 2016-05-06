@@ -1,13 +1,14 @@
 package com.bookislife.flow.data;
 
 import com.bookislife.flow.Environment;
-import com.bookislife.flow.IOUtils;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.mongodb.MongoClient;
-import io.vertx.core.json.JsonObject;
-import io.vertx.rxjava.core.Vertx;
 
 import javax.inject.Singleton;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by SidneyXu on 2016/05/03.
@@ -15,38 +16,44 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 public class MongoContext {
 
-    private final Vertx vertx;
-    private final JsonObject config;
+    private Cache<String, MongoClient> cache;
+    private long cleanerInterval;
 
-    private ConcurrentHashMap<String, JsonObject> configMap = new ConcurrentHashMap<>();
+    public MongoContext() {
+        long expires = Long.parseLong(System.getProperty(Environment.Config.DB_CONNECTION_EXPIRES,
+                "" + Environment.Default.dbConnectionExpires));
+        cleanerInterval = Long.parseLong(System.getProperty(Environment.Config.DB_CLEANER_INTERVAL,
+                "" + Environment.Default.dbCleanerInterval));
 
-    public MongoContext(Vertx vertx) {
-        this.vertx = vertx;
-        String json = System.getProperty(Environment.Config.MONGO_CONFIG_PROP_NAME);
-        if (null == json) {
-            json = IOUtils.loadResource(MongoContext.class, Environment.Config.MONGO_CONFIG_FILE_NAME);
+        cache = CacheBuilder.newBuilder()
+                .expireAfterAccess(expires, TimeUnit.MILLISECONDS)
+                .build();
+        new Cleaner().start();
+    }
+
+    public MongoClient getClient(MongoClientOptions options) {
+        try {
+            return cache.get(options.getConnectionUrl(), new Callable<MongoClient>() {
+                @Override
+                public MongoClient call() throws Exception {
+                    return new MongoClient(options.getServerAddress());
+                }
+            });
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
         }
-        this.config = new JsonObject(json);
     }
 
-    private JsonObject loadConfig(String dataSource) {
-        return configMap.computeIfAbsent(dataSource, s -> {
-            String json = System.getProperty(Environment.Config.MONGO_CONFIG_PROP_NAME);
-            if (null == json) {
-                json = IOUtils.loadResource(MongoContext.class,
-                        Environment.Config.MONGO_CONFIG_FILE_NAME);
+    class Cleaner extends Thread {
+        @Override
+        public void run() {
+            while (true) {
+                cache.cleanUp();
+                try {
+                    sleep(cleanerInterval);
+                } catch (InterruptedException ignored) {
+                }
             }
-
-            return new JsonObject(json);
-        });
+        }
     }
-
-    public MongoClient getClient(String dataSource) {
-        JsonObject config = loadConfig(dataSource);
-        // TODO: 5/4/16
-        return null;
-//        return MongoClient.createShared(vertx, config, dataSource);
-    }
-
-
 }
