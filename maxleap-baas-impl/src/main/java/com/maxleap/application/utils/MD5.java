@@ -11,6 +11,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * Created by shunlv on 16-2-18.
  */
+@Deprecated
 public class MD5 {
   private final static Logger LOG = LoggerFactory.getLogger(MD5.class);
 

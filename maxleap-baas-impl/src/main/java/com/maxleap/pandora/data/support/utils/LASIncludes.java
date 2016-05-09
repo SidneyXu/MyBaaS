@@ -9,6 +9,7 @@ import java.util.Set;
  * @author sneaky
  * @since 2.0.0
  */
+@Deprecated
 public class LASIncludes {
   public static final int MAX_INCLUDES = 10;
   public static final int MAX_CASCADE = 5;

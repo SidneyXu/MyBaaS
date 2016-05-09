@@ -8,6 +8,7 @@ import io.vertx.ext.web.RoutingContext;
  * @author sneaky
  * @since 1.0.0
  */
+@Deprecated
 public interface ExceptionHandler extends Handler<RoutingContext> {
   static ExceptionHandler create() {
     return new ExceptionHandlerImpl();
