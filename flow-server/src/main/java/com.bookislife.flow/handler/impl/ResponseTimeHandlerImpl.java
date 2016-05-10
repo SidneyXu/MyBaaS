@@ -1,6 +1,6 @@
 package com.bookislife.flow.handler.impl;
 
-import com.bookislife.flow.Environment;
+import com.bookislife.flow.Env;
 import com.bookislife.flow.handler.ResponseTimeHandler;
 import io.vertx.rxjava.ext.web.RoutingContext;
 
@@ -13,7 +13,7 @@ public class ResponseTimeHandlerImpl implements ResponseTimeHandler {
         long start = System.currentTimeMillis();
         context.addHeadersEndHandler(event -> {
             long duration = System.currentTimeMillis() - start;
-            context.response().putHeader(Environment.Header.RESPONSE_TIME, duration + "ms");
+            context.response().putHeader(Env.Header.RESPONSE_TIME, duration + "ms");
         });
         context.next();
     }

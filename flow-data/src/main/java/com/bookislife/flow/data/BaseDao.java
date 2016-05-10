@@ -1,5 +1,7 @@
 package com.bookislife.flow.data;
 
+import com.bookislife.flow.exception.FlowException;
+
 import java.util.List;
 
 /**
@@ -15,7 +17,7 @@ public interface BaseDao {
 
     BaseEntity insertOrUpdate();
 
-    void batchInsert(String database, String tableName, List<BaseEntity> entities);
+    void batchInsert(String database, String tableName, List<? extends BaseEntity> entities);
 
     int deleteById(String database,
                    String tableName,
@@ -25,9 +27,9 @@ public interface BaseDao {
                         String tableName,
                         String id);
 
-    BaseEntity findOne();
+    BaseEntity findOne(String database, String tableName, BaseQuery query) throws FlowException;
 
-    List<BaseEntity> findAll();
+    List<BaseEntity> findAll(String database, String tableName, BaseQuery query) throws FlowException;
 
     long count(String database,
                String tableName,

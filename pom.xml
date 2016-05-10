@@ -28,6 +28,7 @@
     <jackson.version>2.7.0</jackson.version>
     <guice.version>4.0</guice.version>
     <junit.version>4.11</junit.version>
+    <assertj.version>3.4.1</assertj.version>
     <guava.version>19.0</guava.version>
     <!--end-->
 
@@ -120,6 +121,14 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <!-- use 2.4.1 for Java 7 projects -->
+        <version>{assertj.version></version>
         <scope>test</scope>
       </dependency>
 
@@ -287,11 +296,11 @@
     </dependency>
 
     <!-- test part-->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>junit</groupId>-->
+      <!--<artifactId>junit</artifactId>-->
+      <!--<scope>test</scope>-->
+    <!--</dependency>-->
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>testtools</artifactId>

@@ -1,6 +1,6 @@
 package com.bookislife.flow.data;
 
-import com.bookislife.flow.Environment;
+import com.bookislife.flow.Env;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.mongodb.MongoClient;
@@ -20,10 +20,10 @@ public class MongoContext {
     private long cleanerInterval;
 
     public MongoContext() {
-        long expires = Long.parseLong(System.getProperty(Environment.Config.DB_CONNECTION_EXPIRES,
-                "" + Environment.Default.dbConnectionExpires));
-        cleanerInterval = Long.parseLong(System.getProperty(Environment.Config.DB_CLEANER_INTERVAL,
-                "" + Environment.Default.dbCleanerInterval));
+        long expires = Long.parseLong(System.getProperty(Env.Config.DB_CONNECTION_EXPIRES,
+                "" + Env.Default.dbConnectionExpires));
+        cleanerInterval = Long.parseLong(System.getProperty(Env.Config.DB_CLEANER_INTERVAL,
+                "" + Env.Default.dbCleanerInterval));
 
         cache = CacheBuilder.newBuilder()
                 .expireAfterAccess(expires, TimeUnit.MILLISECONDS)
