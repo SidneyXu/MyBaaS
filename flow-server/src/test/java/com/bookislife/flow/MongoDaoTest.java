@@ -1,8 +1,6 @@
-package com.bookislife.flow.data;
+package com.bookislife.flow;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by SidneyXu on 2016/05/05.
