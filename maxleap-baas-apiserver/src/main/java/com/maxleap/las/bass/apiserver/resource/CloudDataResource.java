@@ -52,13 +52,7 @@ public class CloudDataResource {
   public void create(RoutingContext context) {
     func(context, (ctx, cloudCode, appId, className, principal) -> {
       LASObject doc = MongoJsons.deserialize(ctx.getBodyAsString(), LASObject.class);
-      //TODO code move to filter
-//      Map<String, Object> creatorMap = Maps.newHashMap();
-//      creatorMap.put("type", principal.getIdentityType().getCreatorType());
-//      creatorMap.put("id", principal.getId());
-//      Map<String, Object> aclMap = Maps.newHashMap();
-//      aclMap.put("creator", creatorMap);
-//      object.put("ACL", aclMap);
+
       if (cloudCode) {
         SaveMsg saveMsg = cloudCodeService.invokeCreate(appId.toString(), className, doc, null);
         ctx.response().end(MongoJsons.serialize(saveMsg));
@@ -382,16 +376,9 @@ public class CloudDataResource {
     }
   }
 
-  private void assertCanAccessInnerClass(String className, LASPrincipal principal) {
-    if (className != null && className.startsWith("_")) {
-      //TODO must be MASTER KEY can be access
-    }
-  }
-
   private void func(RoutingContext ctx, Func func) {
     LASPrincipal principal = ctx.get(Constants.LAS_PRINCIPAL);
     String className = ctx.request().getParam("className");
-    assertCanAccessInnerClass(className, principal);
     ObjectId appId = ResourceUtils.getAppIdFormHeader(ctx);
     String s = ctx.request().headers().get(Constants.HEADER_MAXLEAP_CCODE_MAPPING);
     if (s == null) {

@@ -30,6 +30,7 @@
     <junit.version>4.11</junit.version>
     <assertj.version>3.4.1</assertj.version>
     <guava.version>19.0</guava.version>
+    <javax.ws.rs.version>2.0</javax.ws.rs.version>
     <!--end-->
 
     <maxleap-baas.version>1.0.0</maxleap-baas.version>
@@ -50,7 +51,7 @@
     <commons.codec.version>1.6</commons.codec.version>
     <metric.version>3.0.2</metric.version>
     <cloudcode.sdk.version>2.4.5</cloudcode.sdk.version>
-    <javax.ws.rs.version>2.0</javax.ws.rs.version>
+
     <commons.lang3.version>3.4</commons.lang3.version>
 
 
@@ -132,6 +133,12 @@
         <scope>test</scope>
       </dependency>
 
+      <dependency>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>javax.ws.rs-api</artifactId>
+        <version>${javax.ws.rs.version}</version>
+      </dependency>
+
       <!--end-->
 
       <dependency>
@@ -174,11 +181,7 @@
         <artifactId>commons-lang3</artifactId>
         <version>${commons.lang3.version}</version>
       </dependency>
-      <dependency>
-        <groupId>javax.ws.rs</groupId>
-        <artifactId>javax.ws.rs-api</artifactId>
-        <version>${javax.ws.rs.version}</version>
-      </dependency>
+
 
 
       <dependency>

@@ -35,39 +35,6 @@ public class Utils {
     return method.getName().startsWith("set") && method.getParameterTypes().length == 1;
   }
 
-//  public static <T> T toObject(List<Item> values, Class<T> clazz) {
-//    T t = newInstance(clazz);
-//
-//    Map<String, Method> setterMethods = getSetterMethods(clazz);
-//
-//    values.forEach(item -> {
-//      Method method = setterMethods.get(item.getKey());
-//      if (method != null) {
-//        try {
-//          method.invoke(t, item);
-//        } catch (IllegalAccessException e) {
-//          logger.error(e.getMessage(), e);
-//        } catch (InvocationTargetException e) {
-//          logger.error(e.getMessage(), e);
-//        }
-//      } else {
-//        if (logger.isDebugEnabled()) {
-//          logger.debug("Can't find setter method for key: {}", item.getKey());
-//        }
-//      }
-//    });
-//
-//    return t;
-//  }
-
-  public static <T> T newInstance(Class<T> clazz) {
-    try {
-      return clazz.newInstance();
-    } catch (Exception e) {
-      throw new IllegalArgumentException("Cannot instantiate " + clazz.getName(), e);
-    }
-  }
-
   public static List<HostAndPort> listUrl(String urls, int defaultPort) {
     List<HostAndPort> hostAndPorts = new ArrayList<>();
     String[] arrayUrl = urls.split(",");
