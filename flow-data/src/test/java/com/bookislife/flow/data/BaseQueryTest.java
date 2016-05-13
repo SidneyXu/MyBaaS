@@ -1,23 +1,34 @@
 package com.bookislife.flow.data;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
-
-import static org.junit.Assert.*;
+import java.util.Date;
 
 /**
  * Created by SidneyXu on 2016/05/13.
  */
 public class BaseQueryTest {
 
+    private ObjectWriter writer;
+
+    @Before
+    public void setup() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        writer = objectMapper.writerWithDefaultPrettyPrinter();
+    }
+
     @Test
-    public void test01(){
-        Condition condition=new Condition.Builder()
+    public void testCore() throws Exception {
+        Condition condition = new Condition.Builder()
                 .addCondition("$eq", "x", 1)
-                .addCondition("$in", "color", Arrays.asList("yellow","blue"))
+                .addCondition("$in", "color", Arrays.asList("yellow", "blue"))
                 .addCondition("$exists", "name", true)
                 .create();
+        writer.writeValue(System.out, condition);
         /*
             {
                 x: {
@@ -34,13 +45,51 @@ public class BaseQueryTest {
     }
 
     @Test
-    public void test02(){
-        BaseQuery blogQuery=BaseQuery.from("t_blog");
-        BaseQuery commentQuery=BaseQuery.from("t_comment");
-
-        Condition condition=new Condition.Builder()
-                .addCondition("$link", "blog_id", "t_blog.id")
+    public void testLike() throws Exception {
+        Condition condition = new Condition.Builder()
+                .addCondition("$like", "name", "/Jack.*/i")
+                .addCondition("$exists", "name", true)
                 .create();
+        writer.writeValue(System.out, condition);
+    }
 
+    @Test
+    public void testLink() throws Exception {
+        BaseQuery blogQuery = BaseQuery.from("t_blog");
+        BaseQuery commentQuery = BaseQuery.from("t_comment");
+
+        Condition condition = new Condition.Builder()
+                .addCondition("$link", "id", new Condition.Link("t_blog", "id"))
+                .create();
+        writer.writeValue(System.out, condition);
+
+        /*
+            {
+                id: {
+                  "$link":"t_blog.id"
+                }
+            }
+         */
+    }
+
+    @Test
+    public void testQuery() throws Exception {
+        BaseQuery commentQuery = BaseQuery.from("t_comment");
+        Condition condition = commentQuery.newCondition()
+                .eq("author", "Jane")
+                .gt("publish_date", new Date())
+                .link("blog_id", new Condition.Link("t_blog", "id"))
+                .create();
+        commentQuery.setCondition(condition);
+
+        Constraint constraint = commentQuery.newConstraint()
+                .limit(100)
+                .skip(10)
+                .include("title")
+                .include("description")
+                .createConstraint();
+        commentQuery.setConstraint(constraint);
+
+        writer.writeValue(System.out, commentQuery);
     }
 }

@@ -11,15 +11,20 @@
 
     <artifactId>flow-data</artifactId>
 
-<dependencies>
-    <dependency>
-        <groupId>io.reactivex</groupId>
-        <artifactId>rxjava</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>com.bookislife</groupId>
-        <artifactId>flow-core</artifactId>
-        <version>1.0.0</version>
-    </dependency>
-</dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>io.reactivex</groupId>
+            <artifactId>rxjava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.bookislife</groupId>
+            <artifactId>flow-core</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 </project>
