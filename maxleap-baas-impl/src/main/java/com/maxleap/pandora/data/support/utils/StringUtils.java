@@ -4,6 +4,7 @@ package com.maxleap.pandora.data.support.utils;
  * @author sneaky
  * @since 3.0.0
  */
+@Deprecated
 public class StringUtils {
   public static String[] delimitedListToStringArray(String str, String delimiter) {
     if (str == null) {

@@ -12,6 +12,7 @@ import java.util.Base64;
  * @author sneaky
  * @since 3.0.0
  */
+@Deprecated
 public class MD5 {
   private final static Logger LOG = LoggerFactory.getLogger(MD5.class);
 
