@@ -50,6 +50,7 @@ public abstract class ResourceUtils {
   public static URL getURL(String resourceLocation) throws FileNotFoundException {
     Assert.notNull(resourceLocation, "Resource location must not be null");
     Assert.notNull(resourceLocation, "Resource location must not be null");
+    // TODO: 16/5/16  
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     URL url = (cl != null ? cl.getResource(resourceLocation) : ClassLoader.getSystemResource(resourceLocation));
     if (url == null) {

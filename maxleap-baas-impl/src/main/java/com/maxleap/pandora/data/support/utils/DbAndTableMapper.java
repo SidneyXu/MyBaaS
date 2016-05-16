@@ -7,6 +7,7 @@ import com.maxleap.domain.base.ObjectId;
  * @author sneaky
  * @since 1.0
  */
+@Deprecated
 public class DbAndTableMapper {
 
   public static String getDB(ObjectId appId) {

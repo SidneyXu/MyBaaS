@@ -147,13 +147,17 @@ public class WebServerStarter extends AbstractVerticle {
 
   private void registerGlobalHandler(Router mainRouter) {
     // Exception handler
+    //----start
     mainRouter.route().failureHandler(ExceptionHandler.create());
     mainRouter.route().handler(ResponseTimeHandler.create());
-    // We need cookies and request bodies.
-    // We need a cookie handler first
     mainRouter.route().handler(CookieHandler.create());
     mainRouter.route().handler(BodyHandler.create());
-    mainRouter.route().handler(CustomStaticHandler.create());
+
+    //---end
+
+    // We need cookies and request bodies.
+    // We need a cookie handler first
+  mainRouter.route().handler(CustomStaticHandler.create());
     mainRouter.route().handler(RedirectHandler.create());
     mainRouter.route().handler(SomethingAdjustHandler.create());
     mainRouter.route().handler(AccessControlHandler.create(injector.getInstance(AccessControlService.class), config));
