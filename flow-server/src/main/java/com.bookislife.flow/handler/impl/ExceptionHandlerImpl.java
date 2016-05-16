@@ -1,6 +1,6 @@
 package com.bookislife.flow.handler.impl;
 
-import com.bookislife.flow.FlowException;
+import com.bookislife.flow.exception.FlowException;
 import com.bookislife.flow.handler.ExceptionHandler;
 import com.bookislife.flow.utils.JacksonJsonBuilder;
 import io.vertx.rxjava.ext.web.RoutingContext;

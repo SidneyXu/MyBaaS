@@ -32,6 +32,7 @@ public abstract class ResourceUtils {
 
   public static final String JAR_URL_SEPARATOR = "!/";
 
+  //com/maxleap/las/bass/apiserver/resource"
   public static Set<Class> findAllClass(String resourceLocation) {
     try {
       URL url = getURL(resourceLocation);

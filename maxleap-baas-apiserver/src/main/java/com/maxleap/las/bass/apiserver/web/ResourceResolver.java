@@ -23,4 +23,8 @@ public class ResourceResolver {
   public static List<Class> findAllClassWithAnnotation(String path, Class clazz) {
       return ResourceUtils.findAllClass(path).stream().filter(c -> c.getAnnotation(clazz) != null).collect(Collectors.toList());
   }
+
+  public static void main(String[] args) {
+    System.out.println(resolve());
+  }
 }
