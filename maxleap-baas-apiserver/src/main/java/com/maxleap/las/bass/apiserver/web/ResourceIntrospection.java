@@ -28,7 +28,12 @@ public class ResourceIntrospection {
   }
 
   public static PrivilegedAction<Method[]> getDeclaredMethodsPA(final Class<?> clazz) {
-    return () -> clazz.getMethods();
+    return new PrivilegedAction<Method[]>() {
+      @Override
+      public Method[] run() {
+        return clazz.getMethods();
+      }
+    };
   }
 
   public static Optional<Path> resolvePathFromMethod(final Method method) {
