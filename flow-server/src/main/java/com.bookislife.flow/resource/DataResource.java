@@ -1,7 +1,9 @@
 package com.bookislife.flow.resource;
 
+import com.bookislife.flow.data.DataStorage;
 import io.vertx.rxjava.ext.web.RoutingContext;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -15,6 +17,13 @@ import javax.ws.rs.core.MediaType;
 @Singleton
 @Path("/classes")
 public class DataResource {
+
+    private DataStorage dataStorage;
+
+    @Inject
+    public DataResource(DataStorage dataStorage) {
+        this.dataStorage = dataStorage;
+    }
 
     @POST
     @Path(":className")
