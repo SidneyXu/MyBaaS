@@ -29,12 +29,12 @@ public class DataResource {
     @Path(":className")
     @Consumes(MediaType.APPLICATION_JSON)
     public void create(RoutingContext context) {
-
+        System.out.println("111233");
     }
 
     @GET
     @Path(":className/:objectId")
     public void get(RoutingContext context) {
-
+        System.out.println("2252525");
     }
 }

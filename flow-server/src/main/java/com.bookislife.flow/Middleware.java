@@ -18,13 +18,6 @@ public class Middleware {
     @Inject
     private ResponseTimeHandler responseTimeHandler;
 
-    @Inject
-    private CookieHandler cookieHandler;
-
-    @Inject
-    private BodyHandler bodyHandler;
-
-
     public ExceptionHandler getExceptionHandler() {
         return exceptionHandler;
     }
@@ -34,10 +27,10 @@ public class Middleware {
     }
 
     public CookieHandler getCookieHandler() {
-        return cookieHandler;
+        return CookieHandler.create();
     }
 
     public BodyHandler getBodyHandler() {
-        return bodyHandler;
+        return BodyHandler.create();
     }
 }

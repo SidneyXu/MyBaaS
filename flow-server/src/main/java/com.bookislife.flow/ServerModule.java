@@ -1,5 +1,7 @@
 package com.bookislife.flow;
 
+import com.bookislife.flow.data.DataStorage;
+import com.bookislife.flow.data.MongoDataStorage;
 import com.bookislife.flow.module.DataServiceModule;
 import com.google.inject.AbstractModule;
 import com.google.inject.Binder;
@@ -23,6 +25,8 @@ public class ServerModule extends AbstractModule {
 
     @Override
     protected void configure() {
+        bind(DataStorage.class).to(MongoDataStorage.class);
         bind(DataServiceModule.class);
+
     }
 }
