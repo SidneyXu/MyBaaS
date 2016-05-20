@@ -17,6 +17,7 @@
     <module>flow-server</module>
     <module>flow-data</module>
     <module>flow-data-mongo</module>
+    <module>flow-complier</module>
   </modules>
 
   <properties>
@@ -31,6 +32,7 @@
     <assertj.version>3.4.1</assertj.version>
     <guava.version>19.0</guava.version>
     <javax.ws.rs.version>2.0</javax.ws.rs.version>
+    <dagger.version>1.2.5</dagger.version>
     <!--end-->
 
     <maxleap-baas.version>1.0.0</maxleap-baas.version>
@@ -137,6 +139,18 @@
         <groupId>javax.ws.rs</groupId>
         <artifactId>javax.ws.rs-api</artifactId>
         <version>${javax.ws.rs.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.squareup.dagger</groupId>
+        <artifactId>dagger</artifactId>
+        <version>${dagger.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.squareup.dagger</groupId>
+        <artifactId>dagger-compiler</artifactId>
+        <version>${dagger.version}</version>
+        <optional>true</optional>
       </dependency>
 
       <!--end-->
