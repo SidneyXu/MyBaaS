@@ -17,6 +17,9 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by SidneyXu on 2016/05/01.
@@ -27,6 +30,8 @@ public class ServerStarter extends AbstractVerticle {
 
     private JsonObject config;
     private Injector injector;
+
+    private final ExecutorService executorService = Executors.newWorkStealingPool();
 
     public static void main(String[] args) {
         Runner.runExample(ServerStarter.class);
@@ -85,20 +90,26 @@ public class ServerStarter extends AbstractVerticle {
                     ResourceDescriptor clazzDescriptor = resource.getClassDescriptor();
                     resource.getMethodDescriptorList().forEach(methodDescriptor -> {
                         Object singleton = injector.getInstance(resource.clazz);
+
                         Route route = rootRouter.route();
                         applyRoute(route, clazzDescriptor, methodDescriptor);
-                        
+
                         route.handler(ctx -> {
-                            System.out.println(Thread.currentThread().getName());
-                            Method method = methodDescriptor.method;
-                            // TODO: 5/19/16 interceptor
-                            try {
-                                assert method != null;
-                                method.invoke(singleton, ctx);
-                            } catch (IllegalAccessException | InvocationTargetException e) {
-                                // TODO: 5/19/16
-                                e.printStackTrace();
-                            }
+
+                            CompletableFuture.runAsync(() -> {
+                                System.out.println(Thread.currentThread().getName());
+
+                                Method method = methodDescriptor.method;
+                                // TODO: 5/19/16 interceptor
+                                try {
+                                    assert method != null;
+                                    method.invoke(singleton, ctx);
+                                } catch (IllegalAccessException | InvocationTargetException e) {
+                                    // TODO: 5/19/16
+                                    e.printStackTrace();
+                                }
+                            }, executorService);
+
                         });
                     });
                 });

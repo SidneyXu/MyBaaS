@@ -12,10 +12,10 @@ import javax.inject.Inject;
  */
 public class Middleware {
 
-    @Inject
+//    @Inject
     private ExceptionHandler exceptionHandler;
 
-    @Inject
+//    @Inject
     private ResponseTimeHandler responseTimeHandler;
 
     public ExceptionHandler getExceptionHandler() {

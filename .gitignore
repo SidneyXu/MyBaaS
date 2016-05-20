@@ -93,5 +93,5 @@ jspm_packages
 
 flow-core/target
 flow-data/target
-flow-server/target
+flow-server/target/
 flow-data-mongo/target
