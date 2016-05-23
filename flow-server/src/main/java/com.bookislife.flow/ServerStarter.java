@@ -92,6 +92,9 @@ public class ServerStarter extends AbstractVerticle {
                         Object singleton = injector.getInstance(resource.clazz);
 
                         Route route = rootRouter.route();
+
+                        System.out.println(1111);
+
                         applyRoute(route, clazzDescriptor, methodDescriptor);
 
                         route.handler(ctx -> {

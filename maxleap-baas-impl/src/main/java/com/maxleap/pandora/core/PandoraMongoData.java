@@ -4,6 +4,7 @@ package com.maxleap.pandora.core;
  * @author sneaky
  * @since 3.0.0
  */
+@Deprecated
 public interface PandoraMongoData {
   public static final String KEY_RAW_OBJECT_ID = "_id";
 

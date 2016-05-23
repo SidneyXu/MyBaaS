@@ -15,8 +15,12 @@ public class Middleware {
 //    @Inject
     private ExceptionHandler exceptionHandler;
 
-//    @Inject
     private ResponseTimeHandler responseTimeHandler;
+
+    @Inject
+    public Middleware(ResponseTimeHandler responseTimeHandler) {
+        this.responseTimeHandler = responseTimeHandler;
+    }
 
     public ExceptionHandler getExceptionHandler() {
         return exceptionHandler;

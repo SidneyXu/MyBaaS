@@ -8,6 +8,7 @@ import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Iterator;
 import java.util.List;
@@ -24,9 +25,12 @@ public class MongoDao implements BaseDao {
     private final MongoContext mongoContext;
     private final MongoClientOptions options;
 
-    public MongoDao(MongoContext mongoContext, MongoClientOptions options) {
+    @Inject
+    public MongoDao(MongoContext mongoContext) {
         this.mongoContext = mongoContext;
-        this.options = options;
+        this.options = MongoClientOptions.newBuilder()
+                .url("192.168.1.67")
+                .create();
     }
 
     private MongoCollection<Document> getCollection(String database, String tableName) {

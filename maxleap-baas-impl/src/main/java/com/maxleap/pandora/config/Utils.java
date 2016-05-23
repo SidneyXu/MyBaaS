@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  * @author sneaky
  * @since 1.0.0
  */
+@Deprecated
 public class Utils {
   private static Logger logger = LoggerFactory.getLogger(Utils.class);
 

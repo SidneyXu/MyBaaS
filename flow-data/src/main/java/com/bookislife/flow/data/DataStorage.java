@@ -8,4 +8,6 @@ public interface DataStorage {
     BaseEntity findById(String database,
              String tableName,
              String id);
+
+    String insert(String database, String tableName, BaseEntity entity);
 }

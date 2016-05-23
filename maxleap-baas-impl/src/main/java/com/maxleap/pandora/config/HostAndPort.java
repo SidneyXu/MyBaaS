@@ -4,6 +4,7 @@ package com.maxleap.pandora.config;
  * @author sneaky
  * @since 1.0.0
  */
+@Deprecated
 public class HostAndPort {
   private final String host;
   private final int port;

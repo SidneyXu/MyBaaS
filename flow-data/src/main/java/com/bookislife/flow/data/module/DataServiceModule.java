@@ -1,11 +1,11 @@
-package com.bookislife.flow.module;
+package com.bookislife.flow.data.module;
 
 import com.bookislife.flow.data.MongoContext;
 import com.bookislife.flow.data.MongoDao;
 import com.google.inject.AbstractModule;
 
 /**
- * Created by SidneyXu on 2016/05/05.
+ * Created by SidneyXu on 2016/05/23.
  */
 public class DataServiceModule extends AbstractModule {
 

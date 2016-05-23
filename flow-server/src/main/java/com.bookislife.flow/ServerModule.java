@@ -1,7 +1,6 @@
 package com.bookislife.flow;
 
-import com.bookislife.flow.data.DataStorage;
-import com.bookislife.flow.data.MongoDataStorage;
+import com.bookislife.flow.data.*;
 import com.bookislife.flow.module.DataServiceModule;
 import com.google.inject.AbstractModule;
 import io.vertx.core.json.JsonObject;
@@ -22,22 +21,14 @@ public class ServerModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(DataStorage.class).to(MongoDataStorage.class);
+//        MongoClientOptions options = MongoClientOptions.newBuilder()
+//                .url("localhost")
+//                .create();
+//        bind(MongoClientOptions.class).to(options);
+//        bind(MongoDao.class);
+
         bind(DataServiceModule.class);
+        bind(DataStorage.class).to(MongoDataStorage.class);
 
     }
 }
-//@Module
-//public class ServerModule {
-//    private final Vertx vertx;
-//    private final JsonObject config;
-//
-//    @Inject
-//    private DataServiceModule dataServiceModule;
-//
-//    public ServerModule(Vertx vertx, JsonObject config) {
-//        this.vertx = vertx;
-//        this.config = config;
-//    }
-//
-//}

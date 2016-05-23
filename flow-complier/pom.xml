@@ -15,6 +15,11 @@
         <kotlin.version>1.0.1</kotlin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <javapoet.version>1.7.0</javapoet.version>
+        <auto.common.version>0.6</auto.common.version>
+        <auto.factory.version>1.0-beta3</auto.factory.version>
+        <auto.service.version>1.0-rc2</auto.service.version>
+        <auto.value.version>1.2</auto.value.version>
+        <truth.version>0.28</truth.version>
     </properties>
 
     <dependencies>
@@ -31,6 +36,27 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.truth</groupId>
+            <artifactId>truth</artifactId>
+            <scope>test</scope>
+            <version>${truth.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auto</groupId>
+            <artifactId>auto-common</artifactId>
+            <version>${auto.common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auto.service</groupId>
+            <artifactId>auto-service</artifactId>
+            <version>${auto.service.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.auto.value</groupId>
+            <artifactId>auto-value</artifactId>
+            <version>${auto.value.version}</version>
         </dependency>
     </dependencies>
 </project>
