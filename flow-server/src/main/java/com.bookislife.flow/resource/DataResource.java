@@ -5,6 +5,8 @@ import com.bookislife.flow.data.BaseEntity;
 import com.bookislife.flow.data.DataStorage;
 import com.bookislife.flow.data.MongoDocument;
 import com.bookislife.flow.data.MongoEntity;
+import com.bookislife.flow.utils.JacksonJsonBuilder;
+import com.bookislife.flow.utils.ResponseCreator;
 import io.vertx.rxjava.core.http.HttpServerRequest;
 import io.vertx.rxjava.ext.web.RoutingContext;
 import org.bson.Document;
@@ -35,29 +37,22 @@ public class DataResource {
     @Path(":className")
     @Consumes(MediaType.APPLICATION_JSON)
     public void create(RoutingContext context) {
-        System.out.println("111233");
-
-
-        HttpServerRequest request= context.request();
+        HttpServerRequest request = context.request();
         String tableName = request.getParam("className");
-        String databaseName=request.getHeader(Env.Header.APPLICATION_ID);
-
-//        dataStorage.findById();
-        Document doc = new Document("name", "MongoDB")
-                .append("type", "database")
-                .append("count", 1)
-                .append("info", new Document("x", 203).append("y", 102));
-        MongoDocument mongoDocument = new MongoDocument(doc);
-
-        String objectId=dataStorage.insert(databaseName, tableName,mongoDocument );
-
-        context.response().end(objectId);
+        String databaseName = request.getHeader(Env.Header.APPLICATION_ID);
+        String bodyString = context.getBodyAsString();
+        BaseEntity entity = dataStorage.insert(databaseName, tableName, bodyString);
+        context.response().end(ResponseCreator.newCreateResponse(entity));
     }
 
     @GET
     @Path(":className/:objectId")
     public void get(RoutingContext context) {
-        System.out.println("2252525");
-
+        HttpServerRequest request = context.request();
+        String tableName = request.getParam("className");
+        String objectId = request.getParam("objectId");
+        String databaseName = request.getHeader(Env.Header.APPLICATION_ID);
+        BaseEntity entity = dataStorage.findById(databaseName, tableName, objectId);
+        context.response().end(ResponseCreator.newQueryResponse(entity));
     }
 }

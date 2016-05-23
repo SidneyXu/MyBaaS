@@ -1,22 +1,30 @@
 package com.bookislife.flow.data;
 
+import com.bookislife.flow.data.utils.JacksonDecoder;
+
 import javax.inject.Inject;
 
 /**
  * Created by SidneyXu on 2016/05/19.
  */
-public class MongoDataStorage implements DataStorage{
+public class MongoDataStorage implements DataStorage {
 
     @Inject
     private MongoDao mongoDao;
 
     @Override
     public BaseEntity findById(String database, String tableName, String id) {
-        return null;
+        return mongoDao.findById(database, tableName, id);
     }
 
     @Override
-    public String insert(String database, String tableName, BaseEntity entity) {
-        return mongoDao.insert(database, tableName, entity);
+    public BaseEntity insert(String database, String tableName, String data) {
+        MongoDocument document = JacksonDecoder.decode(data, MongoDocument.class);
+        long current = System.currentTimeMillis();
+        document.setCreatedAt(current);
+        document.setUpdatedAt(current);
+        String id = mongoDao.insert(database, tableName, document);
+        document.setId(id);
+        return document;
     }
 }

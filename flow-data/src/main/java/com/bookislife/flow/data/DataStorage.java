@@ -9,5 +9,5 @@ public interface DataStorage {
              String tableName,
              String id);
 
-    String insert(String database, String tableName, BaseEntity entity);
+    BaseEntity insert(String database, String tableName, String data);
 }

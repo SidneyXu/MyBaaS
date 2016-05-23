@@ -1,8 +1,8 @@
 package com.bookislife.flow.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.bson.Document;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -10,15 +10,35 @@ import java.util.Map;
  */
 public class MongoDocument extends BaseEntity {
 
-    private Map<String, Object> map = new HashMap<>();
-    public final Document document;
+    private Map<String, Object> data;
+    public Document document;
 
     public MongoDocument(Document document) {
         this.document = document;
     }
 
+    @JsonCreator
     public MongoDocument(Map<String, Object> map) {
         this.document = new Document(map);
+        parseData(map);
+    }
+
+//    @JsonCreator
+//    public MongoDocument() {
+//        System.out.println(data);
+//    }
+
+//    @JsonSetter
+//    public void put(String key, Object value) {
+//        System.out.println(key);
+//    }
+
+    @SuppressWarnings("unchecked")
+    private void parseData(Map<String, Object> map) {
+        data = (Map<String, Object>) map.getOrDefault(FIELD_DATA, null);
+        setCreatedAt((Long) map.getOrDefault(FIELD_CREATED_AT, 0));
+        setUpdatedAt((Long) map.getOrDefault(FIELD_UPDATED_AT, getCreatedAt()));
+        setId((String) map.getOrDefault(FIELD_ID, null));
     }
 
     @Override
@@ -28,4 +48,9 @@ public class MongoDocument extends BaseEntity {
         sb.append('}');
         return sb.toString();
     }
+
+    public Map<String, Object> getData() {
+        return data;
+    }
+
 }

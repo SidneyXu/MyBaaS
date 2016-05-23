@@ -5,6 +5,12 @@ package com.bookislife.flow.data;
  */
 public class BaseEntity {
 
+    public static final String FIELD_CREATED_AT = "createdAt";
+    public static final String FIELD_UPDATED_AT = "updatedAt";
+    public static final String FIELD_ID = "id";
+    public static final String FIELD_DATA = "data";
+    public static final String FIELD_META_DATA = "metaData";
+
     private long createdAt;
     private long updatedAt;
     private String id;
