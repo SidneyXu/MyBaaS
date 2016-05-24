@@ -9,6 +9,7 @@ public class MongoServiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-
+        bind(MongoContext.class);
+        bind(MongoDao.class);
     }
 }

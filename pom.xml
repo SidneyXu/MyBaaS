@@ -17,7 +17,7 @@
     <module>flow-server</module>
     <module>flow-data</module>
     <module>flow-data-mongo</module>
-    <module>flow-complier</module>
+    <module>flow-compiler</module>
   </modules>
 
   <properties>
