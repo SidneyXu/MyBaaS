@@ -13,7 +13,7 @@ public interface BaseDao {
                   String tableName,
                   BaseEntity entity);
 
-    BaseEntity update();
+    String update();
 
     BaseEntity insertOrUpdate();
 

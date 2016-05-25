@@ -28,6 +28,9 @@ public class BaseQueryTest {
                 .addCondition("$in", "color", Arrays.asList("yellow", "blue"))
                 .addCondition("$exists", "name", true)
                 .create();
+
+
+
         writer.writeValue(System.out, condition);
         /*
             {

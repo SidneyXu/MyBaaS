@@ -46,11 +46,12 @@ public class ServerStarter extends AbstractVerticle {
         registerGlobalHandler(router);
         registerResourceHandler(router);
 
+        // TODO: 5/25/16
         HttpServerOptions options = new HttpServerOptions();
+
         vertx.createHttpServer(options)
                 .requestHandler(router::accept)
-                // TODO: 16/5/16
-                .listen(10086);
+                .listen(serverConfig.port);
     }
 
     private void registerGlobalHandler(Router router) {
@@ -84,7 +85,9 @@ public class ServerStarter extends AbstractVerticle {
 
     private void registerResourceHandler(Router rootRouter) {
         ResourceLoader resourceLoader = new ResourceLoader(ServerStarter.class.getClassLoader());
-        Set<Class<?>> classSet = resourceLoader.scanPackage("com.bookislife.flow.resource");
+//        Set<Class<?>> classSet = resourceLoader.scanPackage("com.bookislife.flow.resource");
+        Set<Class<?>> classSet = resourceLoader.scanPackage(serverConfig.resourcePath);
+
         classSet.stream()
                 .map(ResourceResolver::resolveResource)
                 .forEach(resource -> {
@@ -131,7 +134,7 @@ public class ServerStarter extends AbstractVerticle {
         // ioc
         injector = Guice.createInjector(new ServerModule(vertx, config));
 
-        serverConfig=new ServerConfig();
+        serverConfig = new ServerConfig();
     }
 
 }

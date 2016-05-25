@@ -36,9 +36,11 @@ public class ServerConfig {
             properties.load(inputStream);
             port = Integer.valueOf(properties.getProperty(PROPS_SERVER_PORT, DEFAULT_PORT));
             packageName = properties.getProperty(PROPS_PACKAGE_NAME, null);
-            resourcePath = properties.getProperty(PROPS_RESOURCE_PATH, null);
 
             Validator.assertNotNull(packageName, PROPS_PACKAGE_NAME + " is missing.");
+
+            resourcePath = properties.getProperty(PROPS_RESOURCE_PATH, packageName + "." + "resource");
+
         } catch (IOException e) {
             logger.error("Unable load server config.", e);
             throw new RuntimeException(e);

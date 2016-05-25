@@ -13,11 +13,9 @@ import org.bson.Document;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Created by SidneyXu on 2016/05/12.
@@ -55,4 +53,28 @@ public class DataResource {
         BaseEntity entity = dataStorage.findById(databaseName, tableName, objectId);
         context.response().end(ResponseCreator.newQueryResponse(entity));
     }
+
+    @PUT
+    @Path(":className/:objectId")
+    public void update(RoutingContext context) {
+        HttpServerRequest request = context.request();
+        String tableName = request.getParam("className");
+        String objectId = request.getParam("objectId");
+
+        // TODO: 5/25/16
+    }
+
+    @POST
+    @Path(":className/query")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void findAll(RoutingContext context) {
+        HttpServerRequest request = context.request();
+        String databaseName = request.getHeader(Env.Header.APPLICATION_ID);
+        String tableName = request.getParam("className");
+        String query = context.getBodyAsString();
+        List<BaseEntity> entities = dataStorage.findAll(databaseName, tableName, query);
+
+        // TODO: 5/25/16
+    }
+
 }

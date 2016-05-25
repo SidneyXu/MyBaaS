@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,7 +70,7 @@ public class MongoDao implements BaseDao {
     }
 
     @Override
-    public BaseEntity update() {
+    public String update() {
         return null;
     }
 
@@ -111,8 +112,17 @@ public class MongoDao implements BaseDao {
     }
 
     @Override
-    public List<BaseEntity> findAll(String database, String tableName, BaseQuery query) {
-        return null;
+    public List<BaseEntity> findAll(String database, String tableName, BaseQuery query) throws FlowException {
+        MongoCollection<Document> collection = getCollection(database, tableName);
+        FindIterable<Document> iterable = collection.find(toDocument(query));
+        Iterator<Document> iterator = iterable.iterator();
+
+        Validator.assertHasNext(iterator, "Object not found.");
+
+        List<BaseEntity> entities = new ArrayList<>();
+        iterator.forEachRemaining(document ->
+                entities.add(new MongoDocument(iterator.next())));
+        return entities;
     }
 
     @Override
