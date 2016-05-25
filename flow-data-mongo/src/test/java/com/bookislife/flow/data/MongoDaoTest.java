@@ -30,7 +30,7 @@ public class MongoDaoTest {
         MongoClientOptions options = MongoClientOptions.newBuilder()
                 .url("localhost")
                 .create();
-//        dao = new MongoDao(mongoContext, options);
+        dao = new MongoDao(mongoContext);
 //        assertNotNull(dao);
     }
 
@@ -80,7 +80,8 @@ public class MongoDaoTest {
 
     @Test
     public void testFindById() throws Exception {
-
+        MongoDocument document= (MongoDocument) dao.findById(database,tableName,"5744dcf5aed0769a8a344a68");
+        System.out.println(document);
     }
 
     @Test

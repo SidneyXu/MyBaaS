@@ -36,7 +36,7 @@ public class MongoDocument extends BaseEntity {
     @SuppressWarnings("unchecked")
     private void parseData(Map<String, Object> map) {
         data = (Map<String, Object>) map.getOrDefault(FIELD_DATA, null);
-        setCreatedAt((Long) map.getOrDefault(FIELD_CREATED_AT, 0));
+        setCreatedAt((Long) map.getOrDefault(FIELD_CREATED_AT, 0L));
         setUpdatedAt((Long) map.getOrDefault(FIELD_UPDATED_AT, getCreatedAt()));
         setId((String) map.getOrDefault(FIELD_ID, null));
     }

@@ -1,7 +1,8 @@
 package com.bookislife.flow;
 
-import com.bookislife.flow.data.*;
-import com.bookislife.flow.module.DataServiceModule;
+import com.bookislife.flow.data.DataStorage;
+import com.bookislife.flow.data.MongoDataStorage;
+import com.bookislife.flow.data.module.DataServiceModule;
 import com.google.inject.AbstractModule;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.core.Vertx;
@@ -27,8 +28,8 @@ public class ServerModule extends AbstractModule {
 //        bind(MongoClientOptions.class).to(options);
 //        bind(MongoDao.class);
 
-        bind(DataServiceModule.class);
-        bind(DataStorage.class).to(MongoDataStorage.class);
+        install(new DataServiceModule());
+//        bind(DataStorage.class).to(MongoDataStorage.class);
 
     }
 }

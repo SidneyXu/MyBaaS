@@ -14,4 +14,12 @@ public class DriverManager {
         DriverManager.driver = driver;
         driver.configure(binder);
     }
+
+    public static Driver getDriver() {
+        return driver;
+    }
+
+    public static void setBinder(Binder binder) {
+        DriverManager.binder = binder;
+    }
 }

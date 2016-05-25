@@ -30,6 +30,7 @@ public class ServerStarter extends AbstractVerticle {
 
     private JsonObject config;
     private Injector injector;
+    private ServerConfig serverConfig;
 
     private final ExecutorService executorService = Executors.newWorkStealingPool();
 
@@ -130,7 +131,7 @@ public class ServerStarter extends AbstractVerticle {
         // ioc
         injector = Guice.createInjector(new ServerModule(vertx, config));
 
-
+        serverConfig=new ServerConfig();
     }
 
 }

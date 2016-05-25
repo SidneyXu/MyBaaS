@@ -4,7 +4,9 @@ import com.bookislife.flow.Validator;
 import com.bookislife.flow.exception.FlowException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +31,7 @@ public class MongoDao implements BaseDao {
     public MongoDao(MongoContext mongoContext) {
         this.mongoContext = mongoContext;
         this.options = MongoClientOptions.newBuilder()
-                .url("192.168.1.67")
+                .url("127.0.0.1")
                 .create();
     }
 
@@ -90,7 +92,10 @@ public class MongoDao implements BaseDao {
 
     @Override
     public BaseEntity findById(String database, String tableName, String id) {
-        return null;
+        Document document = getCollection(database, tableName)
+                .find(Filters.eq("_id", new ObjectId(id)))
+                .first();
+        return new MongoDocument(document);
     }
 
     @Override

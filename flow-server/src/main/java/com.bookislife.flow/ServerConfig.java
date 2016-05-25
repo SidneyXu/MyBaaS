@@ -20,27 +20,36 @@ public class ServerConfig {
     public static final String PROPS_PACKAGE_NAME = "flow.package.name";
     public static final String PROPS_RESOURCE_PATH = "flow.resource.path";
 
-    private String port;
-    private String packageName;
-    private String resourcePath;
+    public static final String DEFAULT_PORT = "10086";
+
+    public final int port;
+    public final String packageName;
+    public final String resourcePath;
 
     public ServerConfig(InputStream inputStream) {
+        if (inputStream == null) {
+            throw new RuntimeException(PROPS_FILE_NAME + " not found.");
+        }
+
         try {
             Properties properties = new Properties();
             properties.load(inputStream);
-            port = properties.getProperty(PROPS_SERVER_PORT, null);
+            port = Integer.valueOf(properties.getProperty(PROPS_SERVER_PORT, DEFAULT_PORT));
             packageName = properties.getProperty(PROPS_PACKAGE_NAME, null);
             resourcePath = properties.getProperty(PROPS_RESOURCE_PATH, null);
+
+            Validator.assertNotNull(packageName, PROPS_PACKAGE_NAME + " is missing.");
         } catch (IOException e) {
             logger.error("Unable load server config.", e);
+            throw new RuntimeException(e);
         }
     }
 
     public ServerConfig() {
-        this(ServerConfig.class.getResourceAsStream(PROPS_FILE_NAME));
+        this(ServerConfig.class.getClassLoader().getResourceAsStream(PROPS_FILE_NAME));
     }
 
-    public String getPort() {
+    public int getPort() {
         return port;
     }
 

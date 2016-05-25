@@ -44,6 +44,11 @@
         </dependency>
         <dependency>
             <groupId>com.bookislife.flow</groupId>
+            <artifactId>flow-data</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.bookislife.flow</groupId>
             <artifactId>flow-data-mongo</artifactId>
             <version>1.0.0</version>
         </dependency>
