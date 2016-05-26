@@ -9,6 +9,7 @@ import java.util.function.Supplier;
  * @author sneaky
  * @since 1.0.0
  */
+@Deprecated
 public class Funcs {
   public static long timeMillis(long times, Supplier<Object> func) {
     long start = System.currentTimeMillis();

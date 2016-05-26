@@ -1,6 +1,7 @@
 package com.bookislife.flow.utils;
 
 import com.bookislife.flow.JsonBuilder;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,6 +21,7 @@ public class JacksonJsonBuilder implements JsonBuilder {
 
     public JacksonJsonBuilder() {
         try {
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
             writer = new StringWriter();
             generator = objectMapper.getFactory()
                     .createGenerator(writer);

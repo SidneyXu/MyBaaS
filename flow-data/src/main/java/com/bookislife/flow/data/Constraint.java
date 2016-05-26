@@ -1,8 +1,8 @@
 package com.bookislife.flow.data;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import com.google.common.base.Joiner;
+
+import java.util.*;
 
 /**
  * Created by SidneyXu on 2016/05/12.
@@ -14,11 +14,16 @@ public class Constraint {
     private List<String> includes;
     private String sort;
 
-    Constraint(int limit, int skip, List<String> includes, String sort) {
+    public Constraint() {
+    }
+
+    Constraint(int limit, int skip, List<String> includes, Set<String> sorts) {
         this.limit = limit;
         this.skip = skip;
         this.includes = includes;
-        this.sort = sort;
+        if (sorts != null) {
+            this.sort = Joiner.on(',').join(sorts);
+        }
     }
 
     public int getLimit() {
@@ -30,11 +35,26 @@ public class Constraint {
     }
 
     public List<String> getIncludes() {
+        if (null == includes) {
+            return null;
+        }
         return Collections.unmodifiableList(includes);
     }
 
     public String getSort() {
         return sort;
+    }
+
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Constraint{");
+        sb.append("limit=").append(limit);
+        sb.append(", skip=").append(skip);
+        sb.append(", includes=").append(includes);
+        sb.append(", sort='").append(sort).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 
     public static Builder newBuilder() {
@@ -45,7 +65,7 @@ public class Constraint {
         private int limit;
         private int skip;
         private List<String> includes;
-        private String sort;
+        private Set<String> sorts;
 
         public Builder limit(int limit) {
             this.limit = limit;
@@ -70,13 +90,16 @@ public class Constraint {
             return this;
         }
 
-        public Builder sort(String sort) {
-            this.sort = sort;
+        public Builder sort(String field, boolean asc) {
+            if (sorts == null) {
+                sorts = new LinkedHashSet<>();
+            }
+            sorts.add((asc ? "+" : "-") + field);
             return this;
         }
 
         public Constraint createConstraint() {
-            return new Constraint(limit, skip, includes, sort);
+            return new Constraint(limit, skip, includes, sorts);
         }
     }
 }

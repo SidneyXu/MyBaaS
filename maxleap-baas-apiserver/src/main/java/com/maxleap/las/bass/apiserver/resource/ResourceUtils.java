@@ -10,6 +10,7 @@ import io.vertx.ext.web.RoutingContext;
  * @author sneaky
  * @since 1.0.0
  */
+@Deprecated
 public class ResourceUtils {
   public final static ObjectId getAppIdFormHeader(RoutingContext ctx) {
     String appId = ctx.request().headers().get(Constants.HEADER_MAXLEAP_APPID);

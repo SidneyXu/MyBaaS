@@ -56,24 +56,6 @@ public class MongoDao {
     this.mongoClientFactory = mongoClientFactory;
   }
 
-  public <T extends BaseEntity<ID>, ID> T create(String db, String table, T entity) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("[create][db: " + db + "][table: " + table + "]");
-    }
-    Assertions.notBlank("db", db);
-    Assertions.notBlank("table", table);
-    Assertions.notNull("entity", entity);
-    Document document = toDocument(entity);
-    getMongoCollection(db, table).insertOne(document);
-    Object id = document.get("_id");
-    if (id instanceof org.bson.types.ObjectId) {
-      ((BaseEntity) entity).setObjectId(new ObjectId(((org.bson.types.ObjectId) id).toHexString()));
-    } else {
-      ((BaseEntity) entity).setObjectId(id);
-    }
-    return entity;
-  }
-
   public <T extends BaseEntity<ID>, ID> void create(String db, String table, List<T> entities) {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("[create, size: " + entities.size() + "][db: " + db + "][table: " + table + "]");
@@ -83,19 +65,6 @@ public class MongoDao {
     Assertions.notNull("entities", entities);
     List<Document> documents = toDocument(entities);
     getMongoCollection(db, table).insertMany(documents);
-  }
-
-  public <ID> int delete(String db, String table, ID id) {
-    Assertions.notBlank("db", db);
-    Assertions.notBlank("table", table);
-    Assertions.notNull("id", id);
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("[deleteById: " + id + "][db: " + db + "][table: " + table + "]");
-    }
-    if (id instanceof ObjectId) {
-      id = (ID) new org.bson.types.ObjectId(((ObjectId) id).toHexString());
-    }
-    return (int) getMongoCollection(db, table).deleteOne(new Document("_id", id)).getDeletedCount();
   }
 
   public int delete(String db, String table, MongoQuery query) {
@@ -108,37 +77,6 @@ public class MongoDao {
     LasSunObjectIdMapper.toMongoObjectIdInMongoQuery(query.getQuery());
     DeleteResult deleteResult = getMongoCollection(db, table).deleteMany(toDocument(query.getQuery()));
     return (int) deleteResult.getDeletedCount();
-  }
-
-  public <T extends BaseEntity<ID>, ID> T get(String db, String table, ID id, Class<T> clazz) {
-    Assertions.notBlank("db", db);
-    Assertions.notBlank("table", table);
-    Assertions.notNull("id", id);
-    Assertions.notNull("clazz", clazz);
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("[getById: " + id + "][db: " + db + "][table: " + table + "]");
-    }
-
-    if (id instanceof ObjectId) {
-      id = (ID) new org.bson.types.ObjectId(((ObjectId) id).toHexString());
-    }
-    Iterator<Document> iterable = getMongoCollection(db, table).find(new Document().append("_id", id)).maxTime(1, TimeUnit.SECONDS).iterator();
-    if (iterable.hasNext()) {
-      return (T) adjust(iterable.next(), clazz);
-    } else {
-      return null;
-    }
-  }
-
-  public <T extends BaseEntity<ID>, ID> List<T> getAll(String db, String table, Class<T> clazz) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("[getAll][db: " + db + "][table: " + table + "]");
-    }
-    Assertions.notBlank("db", db);
-    Assertions.notBlank("table", table);
-    Assertions.notNull("clazz", clazz);
-    FindIterable<Document> iterable = getMongoCollection(db, table).find().limit(200000).maxTime(5, TimeUnit.SECONDS);
-    return extract(iterable, clazz);
   }
 
   public <ID, Result> Result update(String db, String table, ID id, MongoUpdate update) {
@@ -230,13 +168,6 @@ public class MongoDao {
     }
     MongoEntityManager.LasDataIterator lasDataIterator = new MongoEntityManager.LasDataIterator(build(db, table, mongoQuery, true).iterator(), clazz);
     return lasDataIterator;
-  }
-
-  public long count(String db, String table) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("[count all][db: " + db + "][table: " + table + "]");
-    }
-    return getMongoCollection(db, table).count();
   }
 
   List doQuery(String db, String table, MongoQuery query, Class clazz) {

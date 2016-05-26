@@ -1,6 +1,7 @@
 package com.bookislife.flow.data;
 
 import com.bookislife.flow.data.utils.JacksonDecoder;
+import com.bookislife.flow.exception.FlowException;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -19,11 +20,14 @@ public class MongoDataStorage implements DataStorage {
     }
 
     @Override
-    public List<BaseEntity> findAll(String database, String tableName, String query) {
+    public List<BaseEntity> findAll(String database, String tableName, String query) throws FlowException{
+        MongoQuery mongoQuery=JacksonDecoder.decode(query, MongoQuery.class);
+
+
+
 
 //        MongoQuery mongoQuery
-//        return mongoDao.findAll(database, tableName, query);
-        return null;
+        return mongoDao.findAll(database, tableName, mongoQuery);
     }
 
     @Override
@@ -40,5 +44,10 @@ public class MongoDataStorage implements DataStorage {
     @Override
     public int delete(String database, String tableName, String id) {
         return mongoDao.deleteById(database, tableName, id);
+    }
+
+    @Override
+    public long count(String database, String tableName) {
+        return mongoDao.count(database, tableName, null);
     }
 }

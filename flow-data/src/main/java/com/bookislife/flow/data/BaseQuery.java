@@ -5,6 +5,10 @@ package com.bookislife.flow.data;
  */
 public class BaseQuery {
 
+    public static final String FIELD_TABLE_NAME="tableName";
+    public static final String FIELD_CONDITION="condition";
+    public static final String FIELD_CONSTRAINT="constraint";
+
     private final String tableName;
     private Condition condition;
     private Constraint constraint;
@@ -43,5 +47,15 @@ public class BaseQuery {
 
     public String getTableName() {
         return tableName;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("BaseQuery{");
+        sb.append("tableName='").append(tableName).append('\'');
+        sb.append(", condition=").append(condition);
+        sb.append(", constraint=").append(constraint);
+        sb.append('}');
+        return sb.toString();
     }
 }

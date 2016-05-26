@@ -90,6 +90,8 @@ public class BaseQueryTest {
                 .skip(10)
                 .include("title")
                 .include("description")
+                .sort("id",true)
+                .sort("name",false)
                 .createConstraint();
         commentQuery.setConstraint(constraint);
 

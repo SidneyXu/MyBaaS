@@ -1,6 +1,8 @@
 package com.bookislife.flow.data;
 
-import java.util.HashMap;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Map;
 
 /**
@@ -8,13 +10,20 @@ import java.util.Map;
  */
 public class MongoQuery extends BaseQuery {
 
-    private Map<String, Object> query = new HashMap<>();
-
     public MongoQuery(String tableName) {
         super(tableName);
     }
 
+    @JsonCreator
+    public MongoQuery(@JsonProperty("tableName") String tableName,
+                      @JsonProperty("condition") Condition condition,
+                      @JsonProperty("constraint") Constraint constraint) {
+        super(tableName);
+        setCondition(condition);
+        setConstraint(constraint);
+    }
+
     public Map<String, Object> getQuery() {
-        return query;
+        return getCondition().getWhere();
     }
 }

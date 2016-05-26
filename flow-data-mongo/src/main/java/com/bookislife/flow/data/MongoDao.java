@@ -5,6 +5,7 @@ import com.bookislife.flow.exception.FlowException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.sun.tools.internal.jxc.ap.Const;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -12,16 +13,20 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by SidneyXu on 2016/05/03.
  */
 @Singleton
 public class MongoDao implements BaseDao {
+
+    public static final int TIMEOUT = 1000;
+    public static final int BATCH_TIMEOUT = 5000;
+    public static final int LIMIT = 1000;
 
     private Logger logger = LoggerFactory.getLogger(MongoDao.class);
 
@@ -88,13 +93,16 @@ public class MongoDao implements BaseDao {
 
     @Override
     public int deleteById(String database, String tableName, String id) {
-        return 0;
+        return (int) getCollection(database, tableName)
+                .deleteOne(Filters.eq("_id", new ObjectId(id)))
+                .getDeletedCount();
     }
 
     @Override
     public BaseEntity findById(String database, String tableName, String id) {
         Document document = getCollection(database, tableName)
                 .find(Filters.eq("_id", new ObjectId(id)))
+                .maxTime(TIMEOUT, TimeUnit.MILLISECONDS)
                 .first();
         return new MongoDocument(document);
     }
@@ -102,7 +110,8 @@ public class MongoDao implements BaseDao {
     @Override
     public BaseEntity findOne(String database, String tableName, BaseQuery query) throws FlowException {
         MongoCollection<Document> collection = getCollection(database, tableName);
-        FindIterable<Document> iterable = collection.find(toDocument(query));
+        FindIterable<Document> iterable = collection.find(toDocument(query))
+                .maxTime(TIMEOUT, TimeUnit.MILLISECONDS);
         Iterator<Document> iterator = iterable.iterator();
 
         Validator.assertHasNext(iterator, "Object not found.");
@@ -114,20 +123,53 @@ public class MongoDao implements BaseDao {
     @Override
     public List<BaseEntity> findAll(String database, String tableName, BaseQuery query) throws FlowException {
         MongoCollection<Document> collection = getCollection(database, tableName);
-        FindIterable<Document> iterable = collection.find(toDocument(query));
+
+        int limit = LIMIT;
+        int skip = 0;
+        Map<String, Object> sortMap = null;
+        if (query.getConstraint() != null) {
+            Constraint constraint = query.getConstraint();
+            if (constraint.getLimit() > 0) {
+                limit = constraint.getLimit();
+            }
+            if (constraint.getSkip() > 0) {
+                skip = constraint.getSkip();
+            }
+            if (constraint.getSort() != null) {
+                sortMap = new LinkedHashMap<>();
+                String[] sorts = constraint.getSort().split(",", -1);
+                for (String sort : sorts) {
+                    sortMap.put(sort.replaceFirst("[+-]", ""), sort.startsWith("+") ? 1 : -1);
+                }
+            }
+        }
+
+        FindIterable<Document> iterable = collection.find(toDocument(query))
+                .limit(limit)
+                .skip(skip)
+                .maxTime(BATCH_TIMEOUT, TimeUnit.MILLISECONDS);
+        if(sortMap!=null){
+            iterable.sort(new Document(sortMap));
+        }
         Iterator<Document> iterator = iterable.iterator();
 
         Validator.assertHasNext(iterator, "Object not found.");
 
         List<BaseEntity> entities = new ArrayList<>();
+
         iterator.forEachRemaining(document ->
-                entities.add(new MongoDocument(iterator.next())));
+                entities.add(new MongoDocument(document)));
         return entities;
     }
 
     @Override
     public long count(String database, String tableName, BaseQuery query) {
-        return getCollection(database, tableName).count();
+        if (query == null) {
+            return getCollection(database, tableName).count();
+        } else {
+            // TODO: 5/26/16
+            return 0;
+        }
     }
 
 }

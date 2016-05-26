@@ -17,6 +17,7 @@ import java.util.jar.JarFile;
  * @author sneaky
  * @since 1.0.0
  */
+@Deprecated
 public abstract class ResourceUtils {
   private final static Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
 

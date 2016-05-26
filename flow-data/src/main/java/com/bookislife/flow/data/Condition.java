@@ -29,8 +29,19 @@ public class Condition {
         this.where = where;
     }
 
-    public Map<String, Map<String, Object>> getWhere() {
+    public Condition() {
+    }
+
+    public Map<String, Object> getWhere() {
         return Collections.unmodifiableMap(where);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Condition{");
+        sb.append("where=").append(where);
+        sb.append('}');
+        return sb.toString();
     }
 
     public static Builder newBuilder() {
