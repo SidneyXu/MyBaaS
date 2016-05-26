@@ -14,4 +14,6 @@ public interface DataStorage {
     List<BaseEntity> findAll(String database, String tableName, String query);
 
     BaseEntity insert(String database, String tableName, String data);
+
+    int delete(String database, String tableName, String id);
 }

@@ -36,4 +36,9 @@ public class MongoDataStorage implements DataStorage {
         document.setId(id);
         return document;
     }
+
+    @Override
+    public int delete(String database, String tableName, String id) {
+        return mongoDao.deleteById(database, tableName, id);
+    }
 }

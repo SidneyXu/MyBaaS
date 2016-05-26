@@ -54,6 +54,24 @@ public class DataResource {
         context.response().end(ResponseCreator.newQueryResponse(entity));
     }
 
+    @DELETE
+    @Path(":className/:objectId")
+    public void delete(RoutingContext context){
+        HttpServerRequest request = context.request();
+        String tableName = request.getParam("className");
+        String objectId = request.getParam("objectId");
+        String databaseName = request.getHeader(Env.Header.APPLICATION_ID);
+        int n = dataStorage.delete(databaseName,tableName,objectId);
+
+        // TODO: 16/5/26
+    }
+
+    @POST
+    @Path(":className/batch")
+    public void batch(RoutingContext context){
+
+    }
+
     @PUT
     @Path(":className/:objectId")
     public void update(RoutingContext context) {

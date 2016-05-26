@@ -104,7 +104,6 @@ public class ServerStarter extends AbstractVerticle {
                         route.handler(ctx -> {
 
                             CompletableFuture.runAsync(() -> {
-                                System.out.println(Thread.currentThread().getName());
 
                                 Method method = methodDescriptor.method;
                                 // TODO: 5/19/16 interceptor
