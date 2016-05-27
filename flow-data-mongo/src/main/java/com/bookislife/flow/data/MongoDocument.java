@@ -23,16 +23,6 @@ public class MongoDocument extends BaseEntity {
         parseData(map);
     }
 
-//    @JsonCreator
-//    public MongoDocument() {
-//        System.out.println(data);
-//    }
-
-//    @JsonSetter
-//    public void put(String key, Object value) {
-//        System.out.println(key);
-//    }
-
     @SuppressWarnings("unchecked")
     private void parseData(Map<String, Object> map) {
         data = (Map<String, Object>) map.getOrDefault(FIELD_DATA, null);
@@ -47,6 +37,18 @@ public class MongoDocument extends BaseEntity {
         sb.append("document=").append(document);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public void setCreatedAt(long createdAt) {
+        super.setCreatedAt(createdAt);
+        document.put(FIELD_CREATED_AT, createdAt);
+    }
+
+    @Override
+    public void setUpdatedAt(long updatedAt) {
+        super.setUpdatedAt(updatedAt);
+        document.put(FIELD_UPDATED_AT, updatedAt);
     }
 
     public Map<String, Object> getData() {

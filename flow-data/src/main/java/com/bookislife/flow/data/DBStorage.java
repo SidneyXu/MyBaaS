@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by SidneyXu on 2016/05/19.
  */
-public interface DataStorage {
+public interface DBStorage {
 
     BaseEntity findById(String database,
                         String tableName,

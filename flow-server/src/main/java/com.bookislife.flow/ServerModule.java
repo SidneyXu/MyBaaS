@@ -1,7 +1,5 @@
 package com.bookislife.flow;
 
-import com.bookislife.flow.data.DataStorage;
-import com.bookislife.flow.data.MongoDataStorage;
 import com.bookislife.flow.data.module.DataServiceModule;
 import com.google.inject.AbstractModule;
 import io.vertx.core.json.JsonObject;
@@ -29,7 +27,7 @@ public class ServerModule extends AbstractModule {
 //        bind(MongoDao.class);
 
         install(new DataServiceModule());
-//        bind(DataStorage.class).to(MongoDataStorage.class);
+//        bind(DBStorage.class).to(MongoDBStorage.class);
 
     }
 }

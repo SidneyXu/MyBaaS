@@ -2,14 +2,11 @@ package com.bookislife.flow.resource;
 
 import com.bookislife.flow.Env;
 import com.bookislife.flow.data.BaseEntity;
-import com.bookislife.flow.data.DataStorage;
-import com.bookislife.flow.data.MongoDocument;
-import com.bookislife.flow.data.MongoEntity;
-import com.bookislife.flow.utils.JacksonJsonBuilder;
+import com.bookislife.flow.data.DBStorage;
+import com.bookislife.flow.exception.FlowException;
 import com.bookislife.flow.utils.ResponseCreator;
 import io.vertx.rxjava.core.http.HttpServerRequest;
 import io.vertx.rxjava.ext.web.RoutingContext;
-import org.bson.Document;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -24,11 +21,11 @@ import java.util.List;
 @Path("/classes")
 public class DataResource {
 
-    private DataStorage dataStorage;
+    private DBStorage storage;
 
     @Inject
-    public DataResource(DataStorage dataStorage) {
-        this.dataStorage = dataStorage;
+    public DataResource(DBStorage storage) {
+        this.storage = storage;
     }
 
     @POST
@@ -39,7 +36,7 @@ public class DataResource {
         String tableName = request.getParam("className");
         String databaseName = request.getHeader(Env.Header.APPLICATION_ID);
         String bodyString = context.getBodyAsString();
-        BaseEntity entity = dataStorage.insert(databaseName, tableName, bodyString);
+        BaseEntity entity = storage.insert(databaseName, tableName, bodyString);
         context.response().end(ResponseCreator.newCreateResponse(entity));
     }
 
@@ -50,7 +47,12 @@ public class DataResource {
         String tableName = request.getParam("className");
         String objectId = request.getParam("objectId");
         String databaseName = request.getHeader(Env.Header.APPLICATION_ID);
-        BaseEntity entity = dataStorage.findById(databaseName, tableName, objectId);
+        BaseEntity entity = null;
+        try {
+            entity = storage.findById(databaseName, tableName, objectId);
+        } catch (FlowException e) {
+            e.printStackTrace();
+        }
         context.response().end(ResponseCreator.newQueryResponse(entity));
     }
 
@@ -61,7 +63,7 @@ public class DataResource {
         String tableName = request.getParam("className");
         String objectId = request.getParam("objectId");
         String databaseName = request.getHeader(Env.Header.APPLICATION_ID);
-        int n = dataStorage.delete(databaseName,tableName,objectId);
+        int n = storage.delete(databaseName,tableName,objectId);
 
         // TODO: 16/5/26
     }
@@ -90,7 +92,11 @@ public class DataResource {
         String databaseName = request.getHeader(Env.Header.APPLICATION_ID);
         String tableName = request.getParam("className");
         String query = context.getBodyAsString();
-        List<BaseEntity> entities = dataStorage.findAll(databaseName, tableName, query);
+        try {
+            List<BaseEntity> entities = storage.findAll(databaseName, tableName, query);
+        } catch (FlowException e) {
+            e.printStackTrace();
+        }
 
         // TODO: 5/25/16
     }

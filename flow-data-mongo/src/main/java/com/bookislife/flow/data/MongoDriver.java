@@ -18,6 +18,6 @@ public final class MongoDriver implements Driver {
     public void configure(Binder binder) {
         binder.bind(MongoContext.class);
         binder.bind(MongoDao.class);
-        binder.bind(DataStorage.class).to(MongoDataStorage.class);
+        binder.bind(DBStorage.class).to(MongoDBStorage.class);
     }
 }

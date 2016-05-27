@@ -12,9 +12,9 @@ import org.junit.Test
 /**
  * Created by SidneyXu on 2016/05/26.
  */
-class MongoDataStorageTest {
+class MongoDBStorageTest {
 
-    private var storage: MongoDataStorage? = null
+    private var storage: MongoDBStorage? = null
 
     private val database = "test"
     private val table = "test"
@@ -30,7 +30,7 @@ class MongoDataStorageTest {
     @Before
     fun setUp() {
         val inject = Guice.createInjector(TestModule())
-        storage = inject.getInstance(MongoDataStorage::class.java)
+        storage = inject.getInstance(MongoDBStorage::class.java)
     }
 
     @Test
@@ -39,7 +39,8 @@ class MongoDataStorageTest {
         {
            "n":1,
            "name":"Peter",
-           "male":true
+           "male":true,
+           "_id":"xyz"
         }
         """
         val entity = storage?.insert(database, table, request)
@@ -48,14 +49,13 @@ class MongoDataStorageTest {
         assert(entity is MongoDocument)
         (entity as MongoDocument).apply {
             println(id)
-
             assert(id.isNotEmpty())
         }
     }
 
     @Test
     fun delete() {
-        val id = "5746771670fe842fac9a1a6c"
+        val id = "xyz"
         val n = storage?.delete(database, table, id)
         assert(n == 1)
     }
@@ -98,7 +98,8 @@ class MongoDataStorageTest {
     fun countQuery() {
         val q = BaseQuery.from(table)
         val condition = q.newCondition()
-                .eq("i", 3)
+//                .gt("i", 1)
+                .eq(BaseEntity.FIELD_ID, "574562e470fe841c342bb3c3")
                 .create()
         q.condition = condition
 
@@ -187,7 +188,7 @@ class MongoDataStorageTest {
 
         override fun configure() {
             bind(MongoDao::class.java)
-            bind(MongoDataStorage::class.java)
+            bind(MongoDBStorage::class.java)
         }
     }
 }

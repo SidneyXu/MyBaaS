@@ -17,6 +17,8 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.mongodb.client.model.Filters.*;
+
 /**
  * Created by SidneyXu on 2016/05/03.
  */
@@ -48,13 +50,20 @@ public class MongoDao implements BaseDao {
                 .getCollection(tableName);
     }
 
+    // TODO: 5/27/16
+    //id createdAt updatedAt
+
     @Override
     public String insert(String database, String tableName, BaseEntity entity) {
         MongoDocument mongoDocument = (MongoDocument) entity;
         Document document = toDocument(mongoDocument);
         getCollection(database, tableName)
                 .insertOne(document);
-        return document.getObjectId("_id").toHexString();
+        Object id = document.get("_id");
+        if (id instanceof ObjectId) {
+            return ((ObjectId) id).toHexString();
+        }
+        return id.toString();
     }
 
     @Override
@@ -63,7 +72,7 @@ public class MongoDao implements BaseDao {
                 .updateMany(
                         toDocument(query),
                         toDocument(modifier))
-        .getModifiedCount();
+                .getModifiedCount();
     }
 
     private Document toDocument(MongoDocument mongoDocument) {
@@ -76,10 +85,14 @@ public class MongoDao implements BaseDao {
                 .collect(Collectors.toList());
     }
 
+    // TODO: 5/27/16
     private Document toDocument(BaseQuery query) {
         if (null == query) return new Document();
         if (query instanceof MongoQuery) {
-            return new Document(((MongoQuery) query).getQuery());
+            Document queryDocument= new Document(((MongoQuery) query).getQuery());
+
+
+            return queryDocument;
         }
         throw new IllegalArgumentException("MongoQuery is expected, actual is " + query.getClass().getName());
     }
@@ -104,7 +117,7 @@ public class MongoDao implements BaseDao {
     @Override
     public int deleteById(String database, String tableName, String id) {
         return (int) getCollection(database, tableName)
-                .deleteOne(Filters.eq("_id", new ObjectId(id)))
+                .deleteOne(eq("_id", ObjectId.isValid(id) ? new ObjectId(id) : id))
                 .getDeletedCount();
     }
 

@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by SidneyXu on 2016/05/19.
  */
-public class MongoDataStorage implements DataStorage {
+public class MongoDBStorage implements DBStorage {
 
     @Inject
     private MongoDao mongoDao;
