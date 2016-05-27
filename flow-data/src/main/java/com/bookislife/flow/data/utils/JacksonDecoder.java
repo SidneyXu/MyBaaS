@@ -21,6 +21,7 @@ public class JacksonDecoder {
 
     public static <T> T decode(String data, Class<T> type) {
         try {
+            if (null == data) return null;
             return objectMapper.readValue(data, type);
         } catch (IOException e) {
             throw new RuntimeException(e);

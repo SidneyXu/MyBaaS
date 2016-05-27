@@ -4,8 +4,8 @@ import com.bookislife.flow.Validator;
 import com.bookislife.flow.exception.FlowException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.CountOptions;
 import com.mongodb.client.model.Filters;
-import com.sun.tools.internal.jxc.ap.Const;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -16,7 +16,6 @@ import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by SidneyXu on 2016/05/03.
@@ -26,7 +25,9 @@ public class MongoDao implements BaseDao {
 
     public static final int TIMEOUT = 1000;
     public static final int BATCH_TIMEOUT = 5000;
-    public static final int LIMIT = 1000;
+    public static final int COUNT_TIMEOUT = 10000;
+    public static final int DEFAULT_LIMIT = 1000;
+    public static final int MAX_LIMIT = 2000;
 
     private Logger logger = LoggerFactory.getLogger(MongoDao.class);
 
@@ -56,6 +57,15 @@ public class MongoDao implements BaseDao {
         return document.getObjectId("_id").toHexString();
     }
 
+    @Override
+    public int update(String database, String tableName, BaseQuery query, BaseModifier modifier) throws FlowException {
+        return (int) getCollection(database, tableName)
+                .updateMany(
+                        toDocument(query),
+                        toDocument(modifier))
+        .getModifiedCount();
+    }
+
     private Document toDocument(MongoDocument mongoDocument) {
         return mongoDocument.document;
     }
@@ -74,9 +84,9 @@ public class MongoDao implements BaseDao {
         throw new IllegalArgumentException("MongoQuery is expected, actual is " + query.getClass().getName());
     }
 
-    @Override
-    public String update() {
-        return null;
+    private Document toDocument(BaseModifier modifier) {
+        if (null == modifier) return new Document();
+        return new Document(modifier.getModifiers());
     }
 
     @Override
@@ -95,6 +105,13 @@ public class MongoDao implements BaseDao {
     public int deleteById(String database, String tableName, String id) {
         return (int) getCollection(database, tableName)
                 .deleteOne(Filters.eq("_id", new ObjectId(id)))
+                .getDeletedCount();
+    }
+
+    @Override
+    public int deleteAll(String database, String tableName, BaseQuery query) throws FlowException {
+        return (int) getCollection(database, tableName)
+                .deleteMany(toDocument(query))
                 .getDeletedCount();
     }
 
@@ -124,7 +141,7 @@ public class MongoDao implements BaseDao {
     public List<BaseEntity> findAll(String database, String tableName, BaseQuery query) throws FlowException {
         MongoCollection<Document> collection = getCollection(database, tableName);
 
-        int limit = LIMIT;
+        int limit = DEFAULT_LIMIT;
         int skip = 0;
         Map<String, Object> sortMap = null;
         if (query.getConstraint() != null) {
@@ -148,8 +165,15 @@ public class MongoDao implements BaseDao {
                 .limit(limit)
                 .skip(skip)
                 .maxTime(BATCH_TIMEOUT, TimeUnit.MILLISECONDS);
-        if(sortMap!=null){
+        if (sortMap != null) {
             iterable.sort(new Document(sortMap));
+        }
+        if (query.getProjection() != null) {
+            Map<String, Object> projectMap = new HashMap<>();
+            query.getProjection()
+                    .getSelects()
+                    .forEach(s -> projectMap.put(s, 1));
+            iterable.projection(new Document(projectMap));
         }
         Iterator<Document> iterator = iterable.iterator();
 
@@ -164,12 +188,10 @@ public class MongoDao implements BaseDao {
 
     @Override
     public long count(String database, String tableName, BaseQuery query) {
-        if (query == null) {
-            return getCollection(database, tableName).count();
-        } else {
-            // TODO: 5/26/16
-            return 0;
-        }
+        MongoCollection<Document> collection = getCollection(database, tableName);
+        CountOptions options = new CountOptions();
+        options.maxTime(COUNT_TIMEOUT, TimeUnit.MILLISECONDS);
+        return collection.count(toDocument(query), options);
     }
 
 }

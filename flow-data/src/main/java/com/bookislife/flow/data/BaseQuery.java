@@ -5,13 +5,14 @@ package com.bookislife.flow.data;
  */
 public class BaseQuery {
 
-    public static final String FIELD_TABLE_NAME="tableName";
-    public static final String FIELD_CONDITION="condition";
-    public static final String FIELD_CONSTRAINT="constraint";
+    public static final String FIELD_TABLE_NAME = "tableName";
+    public static final String FIELD_CONDITION = "condition";
+    public static final String FIELD_CONSTRAINT = "constraint";
 
     private final String tableName;
     private Condition condition;
     private Constraint constraint;
+    private Projection projection;
 
     public BaseQuery(String tableName) {
         this.tableName = tableName;
@@ -27,6 +28,10 @@ public class BaseQuery {
 
     public Constraint.Builder newConstraint() {
         return Constraint.newBuilder();
+    }
+
+    public Projection.Builder newProjection() {
+        return Projection.newBuilder();
     }
 
     public void setCondition(Condition condition) {
@@ -49,12 +54,21 @@ public class BaseQuery {
         return tableName;
     }
 
+    public Projection getProjection() {
+        return projection;
+    }
+
+    public void setProjection(Projection projection) {
+        this.projection = projection;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("BaseQuery{");
         sb.append("tableName='").append(tableName).append('\'');
         sb.append(", condition=").append(condition);
         sb.append(", constraint=").append(constraint);
+        sb.append(", projection=").append(projection);
         sb.append('}');
         return sb.toString();
     }

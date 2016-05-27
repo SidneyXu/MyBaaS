@@ -17,7 +17,11 @@ public interface DataStorage {
 
     BaseEntity insert(String database, String tableName, String data);
 
+    int update(String database, String tableName, String query, String modifier) throws FlowException;
+
     int delete(String database, String tableName, String id);
 
-    long count(String database, String tableName);
+    int deleteAll(String database, String tableName, String query) throws FlowException;
+
+    long count(String database, String tableName, String query);
 }

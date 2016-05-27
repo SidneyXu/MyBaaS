@@ -30,7 +30,6 @@ public class BaseQueryTest {
                 .create();
 
 
-
         writer.writeValue(System.out, condition);
         /*
             {
@@ -90,11 +89,58 @@ public class BaseQueryTest {
                 .skip(10)
                 .include("title")
                 .include("description")
-                .sort("id",true)
-                .sort("name",false)
-                .createConstraint();
+                .sort("id", true)
+                .sort("name", false)
+                .create();
         commentQuery.setConstraint(constraint);
 
+        Projection projection = commentQuery.newProjection()
+                .select("id")
+                .select("name")
+                .create();
+        commentQuery.setProjection(projection);
+
+
         writer.writeValue(System.out, commentQuery);
+    }
+
+    @Test
+    public void testSelect() throws Exception {
+        BaseQuery commentQuery = BaseQuery.from("t_comment");
+        Condition condition = commentQuery.newCondition()
+                .eq("author", "Jane")
+                .gt("publish_date", new Date())
+                .link("blog_id", new Condition.Link("t_blog", "id"))
+                .create();
+        commentQuery.setCondition(condition);
+
+        Constraint constraint = commentQuery.newConstraint()
+                .limit(100)
+                .skip(10)
+                .include("title")
+                .include("description")
+                .sort("id", true)
+                .sort("name", false)
+                .create();
+        commentQuery.setConstraint(constraint);
+
+        Projection projection = commentQuery.newProjection()
+                .select("id")
+                .select("name")
+                .create();
+        commentQuery.setProjection(projection);
+
+
+        writer.writeValue(System.out, commentQuery);
+    }
+
+    @Test
+    public void testModifier() throws Exception {
+        BaseModifier modifier=BaseModifier.newBuilder()
+                .addUpdater(BaseModifier.INC,"name",100)
+                .create();
+
+
+        writer.writeValue(System.out, modifier);
     }
 }

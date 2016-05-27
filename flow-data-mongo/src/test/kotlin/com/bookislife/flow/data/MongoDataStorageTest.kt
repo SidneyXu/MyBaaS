@@ -6,10 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.google.inject.AbstractModule
 import com.google.inject.Guice
-import com.google.inject.Injector
 import org.junit.Before
 import org.junit.Test
-import java.util.*
 
 /**
  * Created by SidneyXu on 2016/05/26.
@@ -63,8 +61,51 @@ class MongoDataStorageTest {
     }
 
     @Test
+    fun deleteQuery() {
+        val commentQuery = BaseQuery.from(table)
+        val condition = commentQuery.newCondition()
+                .gt("i", 2)
+                .create()
+        commentQuery.condition = condition
+
+        val constraint = commentQuery.newConstraint()
+                .limit(3)
+                .skip(0)
+                .sort("i", false)
+                .create()
+        commentQuery.constraint = constraint
+
+        val projection = commentQuery.newProjection()
+                .select("i")
+                .select("j")
+                .create()
+        commentQuery.projection = projection
+
+        val query = writer.writeValueAsString(commentQuery)
+        println(query)
+
+        val n = storage?.deleteAll(database, table, query)
+        println(n)
+    }
+
+    @Test
     fun count() {
-        val n = storage?.count(database, table)
+        val n = storage?.count(database, table, null)
+        println(n)
+    }
+
+    @Test
+    fun countQuery() {
+        val q = BaseQuery.from(table)
+        val condition = q.newCondition()
+                .eq("i", 3)
+                .create()
+        q.condition = condition
+
+        val query = writer.writeValueAsString(q)
+        println(query)
+
+        val n = storage?.count(database, table, query)
         println(n)
     }
 
@@ -93,13 +134,18 @@ class MongoDataStorageTest {
 
         val constraint = commentQuery.newConstraint()
                 .limit(3)
-                .skip(2)
-                .sort("i",false)
-                .createConstraint()
+                .skip(0)
+                .sort("i", false)
+                .create()
         commentQuery.constraint = constraint
 
-        val query = writer.writeValueAsString(commentQuery)
+        val projection = commentQuery.newProjection()
+                .select("i")
+                .select("j")
+                .create()
+        commentQuery.projection = projection
 
+        val query = writer.writeValueAsString(commentQuery)
         println(query)
 
         val newQuery = JacksonDecoder.decode(query, MongoQuery::class.java)
@@ -110,6 +156,31 @@ class MongoDataStorageTest {
         entities?.forEach {
             println(it)
         }
+    }
+
+    @Test
+    fun update() {
+        val commentQuery = BaseQuery.from(table)
+        val condition = commentQuery.newCondition()
+                .eq("i", 1)
+                .create()
+        commentQuery.condition = condition
+
+        val query = writer.writeValueAsString(commentQuery)
+
+        val modifier = BaseModifier.newBuilder()
+                .inc("n", 1)
+                .set("name", "Jane")
+                .create()
+        val m = writer.writeValueAsString(modifier)
+        println(m)
+
+        val nm = JacksonDecoder.decode(m, BaseModifier::class.java)
+        println(nm)
+
+        val n = storage?.update(database, table, query, m)
+        println(n)
+
     }
 
     private inner class TestModule : AbstractModule() {

@@ -67,12 +67,6 @@ public class MongoDaoTest {
                 .addCondition("$eq", "i", 7)
                 .create();
 
-//        Filters.eq("i",7)
-
-
-//        List<BaseEntity> entities = dao.findAll(database, tableName, query);
-//        System.out.println(entities);
-
         MongoCollection<Document> collection = mongoContext.getClient(options)
                 .getDatabase(database)
                 .getCollection(tableName);
@@ -94,9 +88,6 @@ public class MongoDaoTest {
         q.put("i", foo);
 
         Filters.or(Filters.eq("i", 1), Filters.eq("i", 7));
-
-
-//        System.out.println(Filters.eq("i",7).toBsonDocument(Document.class, CodecRegistries.fromCodecs()));
 
 
         Document document = new Document(q);

@@ -67,18 +67,6 @@ public class MongoDao {
     getMongoCollection(db, table).insertMany(documents);
   }
 
-  public int delete(String db, String table, MongoQuery query) {
-    Assertions.notBlank("db", db);
-    Assertions.notBlank("table", table);
-    Assertions.notNull("query", query);
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("[delete: " + query + "][db: " + db + "][table: " + table + "]");
-    }
-    LasSunObjectIdMapper.toMongoObjectIdInMongoQuery(query.getQuery());
-    DeleteResult deleteResult = getMongoCollection(db, table).deleteMany(toDocument(query.getQuery()));
-    return (int) deleteResult.getDeletedCount();
-  }
-
   public <ID, Result> Result update(String db, String table, ID id, MongoUpdate update) {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("[updateById: " + id + "][db: " + db + "][table: " + table + "]");
@@ -87,101 +75,12 @@ public class MongoDao {
     return update(db, table, mongoQuery, update);
   }
 
-  public <Result> Result update(String db, String table, MongoQuery query, MongoUpdate update) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("[update: " + query + "][db: " + db + "][table: " + table + "]");
-    }
-    Assertions.notBlank("db", db);
-    Assertions.notBlank("table", table);
-    Assertions.notNull("query", query);
-    Assertions.notNull("update", update);
-    LasSunObjectIdMapper.toMongoObjectIdInMongoQuery(query.getQuery());
-    LasSunObjectIdMapper.toMongoObjectId(update.getModifierOps());
-    if (update.isUpsert()) {
-      UpdateResult updateResult = getMongoCollection(db, table).updateMany(toDocument(query.getQuery()), toDocument(update.getModifierOps()), new UpdateOptions().upsert(true));
-      BsonValue upsertedId = updateResult.getUpsertedId();
-      if (upsertedId != null) {
-        if (upsertedId instanceof BsonObjectId) {
-          org.bson.types.ObjectId value = ((BsonObjectId) upsertedId).getValue();
-          return (Result) new ObjectId(value.toHexString());
-        } else if (upsertedId instanceof BsonString) {
-          return (Result) ((BsonString) upsertedId).getValue();
-        } else if (upsertedId instanceof BsonInt64) {
-          return (Result) (Long) ((BsonInt64) upsertedId).getValue();
-        } else {
-          throw new MongoDataAccessException("Id Type not supported! type: " + upsertedId.getBsonType().name());
-        }
-      } else {
-        return (Result) (Integer) (int) updateResult.getModifiedCount();
-      }
-
-    } else {
-      UpdateResult updateResult = getMongoCollection(db, table).updateMany(toDocument(query.getQuery()), toDocument(update.getModifierOps()));
-      return (Result) (Integer) (int) updateResult.getModifiedCount();
-    }
-  }
-
-  public <T extends BaseEntity<ID>, ID> T findUniqueOne(String db, String table, MongoQuery query, Class<T> clazz) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("[findUniqueOne: " + query + "][db: " + db + "][table: " + table + "]");
-    }
-    Assertions.notBlank("db", db);
-    Assertions.notBlank("table", table);
-    Assertions.notNull("query", query);
-    Assertions.notNull("clazz", clazz);
-    MongoCollection collection = getMongoCollection(db, table);
-    LasSunObjectIdMapper.toMongoObjectIdInMongoQuery(query.getQuery());
-    Map projectKeys = query.getQueryOptions().getProjectKeys();
-    FindIterable findIterable = collection.find(toDocument(query.getQuery()));
-
-    if (projectKeys != null) {
-      Object objectId = projectKeys.get("objectId");
-      if (objectId != null) {
-        projectKeys.put("_id", objectId);
-        projectKeys.remove("objectId");
-      }
-      findIterable.projection(toDocument(projectKeys));
-    }
-    findIterable.maxTime(3, TimeUnit.SECONDS);
-
-    MongoCursor<Document> iterator = findIterable.iterator();
-    T entity =  null;
-    if (iterator.hasNext()) {
-      entity = (T) adjust(iterator.next(), clazz);
-      if (iterator.hasNext()) {
-        throw new MongoDataAccessException(1, "Expected one result (or null) to be returned, but found more than one");
-      }
-    }
-    return entity;
-  }
-
-  public <T extends BaseEntity<ID>, ID> List<T> find(String db, String table, MongoQuery query, Class<T> clazz) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("[find: " + query + "][db: " + db + "][table: " + table + "]");
-    }
-    return doQuery(db, table, query, clazz);
-  }
-
   public <Entity extends BaseEntity<ID>, ID> Iterator<Entity> findIterator(String db, String table, MongoQuery mongoQuery, Class<Entity> clazz) {
     if (LOGGER.isDebugEnabled()) {
       LOGGER.debug("[findIterator: " + mongoQuery + "][db: " + db + "][table: " + table + "]");
     }
     MongoEntityManager.LasDataIterator lasDataIterator = new MongoEntityManager.LasDataIterator(build(db, table, mongoQuery, true).iterator(), clazz);
     return lasDataIterator;
-  }
-
-  List doQuery(String db, String table, MongoQuery query, Class clazz) {
-    return extract(build(db, table, query, false), clazz);
-  }
-
-  public long count(String db, String table, MongoQuery query) {
-    if (LOGGER.isDebugEnabled()) {
-      LOGGER.debug("[count: " + query + "][db: " + db + "][table: " + table + "]");
-    }
-    CountOptions countOptions = new CountOptions();
-    countOptions.maxTime(60, TimeUnit.SECONDS);
-    LasSunObjectIdMapper.toMongoObjectIdInMongoQuery(query.getQuery());
-    return getMongoCollection(db, table).count(toDocument(query.getQuery()), countOptions);
   }
 
   public MongoDatabase getMongoDatabase(String db) {
@@ -198,94 +97,6 @@ public class MongoDao {
       throw new IllegalArgumentException("DataSource is not available, status: " + mgoDatabase.getStatus() + ", db: " + db);
     }
     return mgoDatabase;
-  }
-
-  FindIterable build(String db, String table, MongoQuery query, boolean it) {
-    Assertions.notBlank("db", db);
-    Assertions.notBlank("table", table);
-    Assertions.notNull("query", query);
-    MongoCollection collection = getMongoCollection(db, table);
-    LasSunObjectIdMapper.toMongoObjectIdInMongoQuery(query.getQuery());
-    MongoQueryOptions queryOptions = query.getQueryOptions();
-    FindIterable findIterable = collection.find(toDocument(query.getQuery()));
-
-    Map projectKeys = queryOptions.getProjectKeys();
-    if (projectKeys != null) {
-      Object objectId = projectKeys.get("objectId");
-      if (objectId != null) {
-        projectKeys.put("_id", objectId);
-        projectKeys.remove("objectId");
-      }
-      findIterable.projection(toDocument(projectKeys));
-    }
-    Map sorts = queryOptions.getSorts();
-    if (sorts != null) {
-      Object objectId = sorts.get("objectId");
-      if (objectId != null) {
-        sorts.put("_id", objectId);
-        sorts.remove("objectId");
-      }
-      findIterable.sort(toDocument(sorts));
-    }
-    if(queryOptions.getSkip() > 0) {
-      findIterable.skip(queryOptions.getSkip());
-    }
-    if (!it) {
-      int limit = queryOptions.getLimit();
-      if (limit > 0 && limit <= 2000) {
-        findIterable.limit(limit);
-      } else if (limit > 2000) {
-        throw new IllegalArgumentException("Query max limit is: " + 2000 + " db: " + db + " table: " + table);
-      } else if (limit <= 0) {
-        findIterable.limit(100);
-      }
-    }
-    findIterable.maxTime(3L, TimeUnit.SECONDS);
-
-    return findIterable;
-  }
-
-  <T> Document toDocument(T entity) {
-    if (entity instanceof Document) {
-      LasSunObjectIdMapper.toMongoObjectId((Map) entity);
-      return (Document) entity;
-    } else if (entity instanceof Map) {
-      LasSunObjectIdMapper.toMongoObjectId((Map) entity);
-      return new Document((Map) entity);
-    } else {
-      BaseEntity doc = (BaseEntity) entity;
-      long createdAt = doc.getCreatedAt();
-      long updatedAt = doc.getUpdatedAt();
-      Document parse = Document.parse(MongoJsons.serializeMongo(entity));
-      parse.put("createdAt", createdAt);
-      parse.put("updatedAt", updatedAt);
-      LasSunObjectIdMapper.to_id(parse);
-      return parse;
-    }
-  }
-
-  <T> List<Document> toDocument(List<T> entities) {
-    T t = entities.get(0);
-    if (t instanceof Document) {
-      return (List<Document>) entities;
-    } else {
-      List<Document> documents = new ArrayList<>(entities.size());
-      for (T t1 : entities) {
-        documents.add(toDocument(t1));
-      }
-      return documents;
-    }
-  }
-
-  <T> List<T> extract(FindIterable<Document> findIterable, Class entityClass) {
-    List entities = new ArrayList<>();
-    findIterable.forEach(new Consumer<Document>() {
-      @Override
-      public void accept(Document document) {
-        entities.add(adjust(document, entityClass));
-      }
-    });
-    return entities;
   }
 
   public Object adjust(Document document, Class entityClass) {

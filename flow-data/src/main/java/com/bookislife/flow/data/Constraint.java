@@ -98,7 +98,7 @@ public class Constraint {
             return this;
         }
 
-        public Constraint createConstraint() {
+        public Constraint create() {
             return new Constraint(limit, skip, includes, sorts);
         }
     }

@@ -13,7 +13,10 @@ public interface BaseDao {
                   String tableName,
                   BaseEntity entity);
 
-    String update();
+    int update(String database,
+                      String tableName,
+                      BaseQuery query,
+                      BaseModifier modifier)throws FlowException;
 
     BaseEntity insertOrUpdate();
 
@@ -22,6 +25,10 @@ public interface BaseDao {
     int deleteById(String database,
                    String tableName,
                    String id);
+
+    int deleteAll(String database,
+                  String tableName,
+                  BaseQuery query) throws FlowException;
 
     BaseEntity findById(String database,
                         String tableName,

@@ -20,13 +20,8 @@ public class MongoDataStorage implements DataStorage {
     }
 
     @Override
-    public List<BaseEntity> findAll(String database, String tableName, String query) throws FlowException{
-        MongoQuery mongoQuery=JacksonDecoder.decode(query, MongoQuery.class);
-
-
-
-
-//        MongoQuery mongoQuery
+    public List<BaseEntity> findAll(String database, String tableName, String query) throws FlowException {
+        MongoQuery mongoQuery = JacksonDecoder.decode(query, MongoQuery.class);
         return mongoDao.findAll(database, tableName, mongoQuery);
     }
 
@@ -42,12 +37,26 @@ public class MongoDataStorage implements DataStorage {
     }
 
     @Override
+    public int update(String database, String tableName, String query, String modifier) throws FlowException {
+        MongoQuery mongoQuery = JacksonDecoder.decode(query, MongoQuery.class);
+        BaseModifier mongoModifier = JacksonDecoder.decode(modifier, BaseModifier.class);
+        return mongoDao.update(database, tableName, mongoQuery, mongoModifier);
+    }
+
+    @Override
     public int delete(String database, String tableName, String id) {
         return mongoDao.deleteById(database, tableName, id);
     }
 
     @Override
-    public long count(String database, String tableName) {
-        return mongoDao.count(database, tableName, null);
+    public int deleteAll(String database, String tableName, String query) throws FlowException {
+        MongoQuery mongoQuery = JacksonDecoder.decode(query, MongoQuery.class);
+        return mongoDao.deleteAll(database, tableName, mongoQuery);
+    }
+
+    @Override
+    public long count(String database, String tableName, String query) {
+        MongoQuery mongoQuery = JacksonDecoder.decode(query, MongoQuery.class);
+        return mongoDao.count(database, tableName, mongoQuery);
     }
 }
