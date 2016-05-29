@@ -1,12 +1,13 @@
 package com.bookislife.flow.data;
 
+import com.bookislife.flow.ObjectTraverser;
 import com.bookislife.flow.Validator;
 import com.bookislife.flow.exception.FlowException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.CountOptions;
-import com.mongodb.client.model.Filters;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Filters.eq;
 
 /**
  * Created by SidneyXu on 2016/05/03.
@@ -76,7 +77,25 @@ public class MongoDao implements BaseDao {
     }
 
     private Document toDocument(MongoDocument mongoDocument) {
-        return mongoDocument.document;
+        Document document = mongoDocument.document;
+        return new ObjectTraverser<Document>(document) {
+            @Override
+            public boolean visit(Object object) {
+                if (object instanceof Map) {
+                    Map map = (Map) object;
+                    if (map.containsKey("id") && map.get("id") instanceof String) {
+                        String id = (String) map.get("id");
+                        if (ObjectId.isValid(id)) {
+                            map.put("_id", new ObjectId(id));
+                        } else {
+                            map.put("_id", id);
+                        }
+                        map.remove("id");
+                    }
+                }
+                return true;
+            }
+        }.transve();
     }
 
     private List<Document> toDocuments(List<? extends BaseEntity> mongoDocuments) {
@@ -85,14 +104,62 @@ public class MongoDao implements BaseDao {
                 .collect(Collectors.toList());
     }
 
+    private void iterateMap(Map<String, Object> map) {
+        Set<Map.Entry<String, Object>> entrySet = map.entrySet();
+        for (Map.Entry<String, Object> entry : entrySet) {
+            if ("id".equals(entry.getKey()) && entry.getValue() instanceof String) {
+                if (ObjectId.isValid((String) entry.getValue())) {
+                    map.put("id", new ObjectId((String) entry.getValue()));
+                }
+            } else if (entry.getValue() instanceof Map) {
+                iterateMap((Map<String, Object>) entry.getValue());
+            } else if (entry.getValue() instanceof List) {
+                iterateList((List<Object>) entry.getValue());
+            }
+        }
+    }
+
+    private void iterateList(List<Object> list) {
+        for (Object object : list) {
+            if (object instanceof List) {
+                iterateList((List<Object>) object);
+            } else if (object instanceof Map) {
+                iterateMap((Map<String, Object>) object);
+            }
+        }
+    }
+
+    private Document toQuery(Map<String, Object> query) {
+        Document document = new Document(query);
+        return new ObjectTraverser<Document>(document) {
+            @Override
+            public boolean visit(Object object) {
+                if (object instanceof Map) {
+                    Map map = (Map) object;
+                    if (map.containsKey("id") && map.get("id") instanceof Map) {
+                        Map tmpMap = (Map) map.get("id");
+                        map.remove("id");
+                        map.put("_id", tmpMap);
+                        Map<String, Object> idCondition = tmpMap;
+                        for (Map.Entry<String, Object> entry : idCondition.entrySet()) {
+                            if (entry.getValue() instanceof String) {
+                                if (ObjectId.isValid((String) entry.getValue())) {
+                                    idCondition.put(entry.getKey(), new ObjectId((String) entry.getValue()));
+                                }
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }.transve();
+    }
+
     // TODO: 5/27/16
     private Document toDocument(BaseQuery query) {
         if (null == query) return new Document();
         if (query instanceof MongoQuery) {
-            Document queryDocument= new Document(((MongoQuery) query).getQuery());
-
-
-            return queryDocument;
+            return toQuery(((MongoQuery) query).getQuery());
         }
         throw new IllegalArgumentException("MongoQuery is expected, actual is " + query.getClass().getName());
     }
@@ -114,10 +181,14 @@ public class MongoDao implements BaseDao {
                 .insertMany(documents);
     }
 
+    private Bson idEq(String id) {
+        return eq("_id", ObjectId.isValid(id) ? new ObjectId(id) : id);
+    }
+
     @Override
     public int deleteById(String database, String tableName, String id) {
         return (int) getCollection(database, tableName)
-                .deleteOne(eq("_id", ObjectId.isValid(id) ? new ObjectId(id) : id))
+                .deleteOne(idEq(id))
                 .getDeletedCount();
     }
 
@@ -131,7 +202,7 @@ public class MongoDao implements BaseDao {
     @Override
     public BaseEntity findById(String database, String tableName, String id) {
         Document document = getCollection(database, tableName)
-                .find(Filters.eq("_id", new ObjectId(id)))
+                .find(idEq(id))
                 .maxTime(TIMEOUT, TimeUnit.MILLISECONDS)
                 .first();
         return new MongoDocument(document);

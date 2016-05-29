@@ -33,6 +33,7 @@ class MongoDBStorageTest {
         storage = inject.getInstance(MongoDBStorage::class.java)
     }
 
+    //TODO
     @Test
     fun insert() {
         val request = """
@@ -40,9 +41,12 @@ class MongoDBStorageTest {
            "n":1,
            "name":"Peter",
            "male":true,
-           "_id":"xyz"
+           "id":"57471ee4aed076eb7586f1c0"
         }
         """
+
+        //TODO
+
         val entity = storage?.insert(database, table, request)
         println(entity)
 
@@ -50,6 +54,7 @@ class MongoDBStorageTest {
         (entity as MongoDocument).apply {
             println(id)
             assert(id.isNotEmpty())
+//            assert(id == "lmn")
         }
     }
 
@@ -98,8 +103,8 @@ class MongoDBStorageTest {
     fun countQuery() {
         val q = BaseQuery.from(table)
         val condition = q.newCondition()
-//                .gt("i", 1)
-                .eq(BaseEntity.FIELD_ID, "574562e470fe841c342bb3c3")
+                //                .gt("i", 1)
+                .eq(BaseEntity.FIELD_ID, "foobar2")
                 .create()
         q.condition = condition
 
@@ -112,7 +117,7 @@ class MongoDBStorageTest {
 
     @Test
     fun get() {
-        val id = "5746777c70fe842fb5604c67"
+        val id = "xyz"
         val entity = storage?.findById(database, table, id)
         println(entity)
     }
@@ -129,7 +134,8 @@ class MongoDBStorageTest {
     fun find() {
         val commentQuery = BaseQuery.from(table)
         val condition = commentQuery.newCondition()
-                .gt("i", 3)
+//                .gt("i", 3)
+                .eq("id","57471ee4aed076eb7586f1c3")
                 .create()
         commentQuery.condition = condition
 
@@ -141,8 +147,8 @@ class MongoDBStorageTest {
         commentQuery.constraint = constraint
 
         val projection = commentQuery.newProjection()
-                .select("i")
-                .select("j")
+//                .select("i")
+//                .select("j")
                 .create()
         commentQuery.projection = projection
 
@@ -163,7 +169,7 @@ class MongoDBStorageTest {
     fun update() {
         val commentQuery = BaseQuery.from(table)
         val condition = commentQuery.newCondition()
-                .eq("i", 1)
+                .eq(BaseEntity.FIELD_ID, "foo")
                 .create()
         commentQuery.condition = condition
 
@@ -184,11 +190,12 @@ class MongoDBStorageTest {
 
     }
 
-    private inner class TestModule : AbstractModule() {
+}
 
-        override fun configure() {
-            bind(MongoDao::class.java)
-            bind(MongoDBStorage::class.java)
-        }
+class TestModule : AbstractModule() {
+
+    override fun configure() {
+        bind(MongoDao::class.java)
+        bind(MongoDBStorage::class.java)
     }
 }

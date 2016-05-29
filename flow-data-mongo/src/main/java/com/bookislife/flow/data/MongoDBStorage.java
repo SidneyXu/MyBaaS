@@ -4,7 +4,9 @@ import com.bookislife.flow.data.utils.JacksonDecoder;
 import com.bookislife.flow.exception.FlowException;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by SidneyXu on 2016/05/19.
@@ -40,6 +42,11 @@ public class MongoDBStorage implements DBStorage {
     public int update(String database, String tableName, String query, String modifier) throws FlowException {
         MongoQuery mongoQuery = JacksonDecoder.decode(query, MongoQuery.class);
         BaseModifier mongoModifier = JacksonDecoder.decode(modifier, BaseModifier.class);
+        if (mongoModifier != null) {
+            Map<String, Object> newUpdater = new HashMap<>();
+            newUpdater.put(BaseEntity.FIELD_UPDATED_AT, System.currentTimeMillis());
+            mongoModifier.modifier(BaseModifier.SET, newUpdater);
+        }
         return mongoDao.update(database, tableName, mongoQuery, mongoModifier);
     }
 

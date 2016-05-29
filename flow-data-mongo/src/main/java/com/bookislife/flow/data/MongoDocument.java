@@ -40,6 +40,12 @@ public class MongoDocument extends BaseEntity {
     }
 
     @Override
+    public void setId(String id) {
+        super.setId(id);
+        document.put(FIELD_ID, id);
+    }
+
+    @Override
     public void setCreatedAt(long createdAt) {
         super.setCreatedAt(createdAt);
         document.put(FIELD_CREATED_AT, createdAt);

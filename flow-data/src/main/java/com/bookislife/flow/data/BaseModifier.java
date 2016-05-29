@@ -32,6 +32,17 @@ public class BaseModifier {
         return Collections.unmodifiableMap(modifiers);
     }
 
+    public void modifier(String op, Map<String, Object> newUpdater) {
+        Map<String, Object> updater;
+        if (modifiers.containsKey(op)) {
+            updater = modifiers.get(op);
+        } else {
+            updater = new LinkedHashMap<>();
+        }
+        updater.putAll(newUpdater);
+        modifiers.put(op, updater);
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("BaseModifier{");

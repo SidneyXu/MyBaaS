@@ -84,56 +84,6 @@ public class WebServerStarter extends AbstractVerticle {
     //init guice container
     injector = Guice.createInjector(new GuiceModel(vertx, config));
 
-    //init system data
-    asyncInitSystemData();
-  }
-
-  private void asyncInitSystemData() {
-    executor.execute(() -> {
-      try {
-        //create default org if not exists
-        OrganizationService organizationService = injector.getInstance(OrganizationService.class);
-        if (organizationService.listAll().size() == 0) {
-          //create org
-          LASOrganization lasOrganization = new LASOrganization();
-          lasOrganization.setObjectId(new ObjectId());
-          lasOrganization.setEnabled(true);
-          lasOrganization.setName("MaxLeap");
-          lasOrganization.setQq("270158613");
-          organizationService.createOrg(lasOrganization);
-
-          //create org roles
-          OrgRoleService orgRoleService = injector.getInstance(OrgRoleService.class);
-          LASOrgRole orgRole = new LASOrgRole();
-          orgRole.setName("OrgAdmin");
-          Set<PermissionType> permissions = new HashSet<>();
-          permissions.add(PermissionType.ORG_ADMIN);
-          orgRole.setPermissions(permissions);
-          orgRole.setOrgId(lasOrganization.getObjectId().toHexString());
-          orgRole.setObjectId(new ObjectId());
-          orgRoleService.createOrgRole(orgRole);
-
-          //create org user
-          OrgUserService orgUserService = injector.getInstance(OrgUserService.class);
-          LASOrgUser orgUser = new LASOrgUser();
-          orgUser.setOrgId(lasOrganization.getObjectId().toHexString());
-          orgUser.setUsername("admin123");
-          orgUser.setEmail("admin123@gmail.com");
-          orgUser.setEmailVerified(true);
-          orgUser.setEnabled(true);
-          orgUser.setPassword(EncryptUtils.encryptPassword("admin123"));
-          orgUser.setUserType(2);
-          List<String> roles = new ArrayList<>();
-          roles.add(orgRole.getObjectId().toHexString());
-          orgUser.setRoles(roles);
-          orgUserService.createOrgUser(orgUser);
-          System.out.print("Init system data success...");
-        }
-      } catch (Exception e) {
-        System.err.println("Maybe you can't log system. some error occur.");
-        e.printStackTrace();
-      }
-    });
   }
 
   private void startWebServer() {

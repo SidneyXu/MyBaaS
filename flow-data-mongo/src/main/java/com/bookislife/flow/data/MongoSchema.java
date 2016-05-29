@@ -8,4 +8,6 @@ public class MongoSchema extends BaseSchema {
     public MongoSchema(String databaseName, String tableName) {
         super(databaseName, tableName);
     }
+
+
 }

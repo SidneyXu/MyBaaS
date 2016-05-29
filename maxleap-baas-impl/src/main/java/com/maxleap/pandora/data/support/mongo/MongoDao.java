@@ -40,11 +40,6 @@ import java.util.function.Consumer;
 @Singleton
 public class MongoDao {
   private static final Logger LOGGER = LoggerFactory.getLogger(MongoDao.class);
-  /**
-   * If query has not limit parameter.
-   */
-  private static final int DEFAULT_LIST_SIZE = 100;
-  private static final int MAX_LIST_SIZE = 2000;
 
   private DatabaseVisitor<MgoDatabase> mgoDatabaseVisitor;
   private MongoClientFactory mongoClientFactory;
@@ -97,31 +92,6 @@ public class MongoDao {
       throw new IllegalArgumentException("DataSource is not available, status: " + mgoDatabase.getStatus() + ", db: " + db);
     }
     return mgoDatabase;
-  }
-
-  public Object adjust(Document document, Class entityClass) {
-    if (entityClass == LASObject.class) {
-      LasSunObjectIdMapper.toLasSunObjectId(document);
-      return new LASObject(document);
-    } else if (Map.class.isAssignableFrom(entityClass)) {
-      LasSunObjectIdMapper.toLasSunObjectId(document);
-      try {
-        return entityClass.getConstructor(Map.class).newInstance(document);
-      } catch (Exception e) {
-        throw new IllegalArgumentException(e);
-      }
-    } else {
-      LasSunObjectIdMapper.toObjectId(document);
-      Object createdAt = document.get("createdAt");
-      if (createdAt instanceof Long) {
-        document.put("createdAt", DateUtils.encodeDate(new Date((Long) createdAt)));
-      }
-      Object updatedAt = document.get("updatedAt");
-      if (updatedAt instanceof Long) {
-        document.put("updatedAt", DateUtils.encodeDate(new Date((Long) updatedAt)));
-      }
-      return MongoJsons.deserialize(MongoJsons.serialize(document), entityClass);
-    }
   }
 
   Document toDocument(Map doc) {

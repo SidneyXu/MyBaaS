@@ -97,8 +97,6 @@ public class ServerStarter extends AbstractVerticle {
 
                         Route route = rootRouter.route();
 
-                        System.out.println(1111);
-
                         applyRoute(route, clazzDescriptor, methodDescriptor);
 
                         route.handler(ctx -> {
@@ -107,6 +105,7 @@ public class ServerStarter extends AbstractVerticle {
 
                                 Method method = methodDescriptor.method;
                                 // TODO: 5/19/16 interceptor
+
                                 try {
                                     assert method != null;
                                     method.invoke(singleton, ctx);
