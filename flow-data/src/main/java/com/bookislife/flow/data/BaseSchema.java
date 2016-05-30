@@ -1,5 +1,6 @@
 package com.bookislife.flow.data;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,6 +8,11 @@ import java.util.Map;
  * Created by SidneyXu on 2016/05/27.
  */
 public class BaseSchema {
+
+    public static final String FIELD_DATABASE_NAME = "database_name";
+    public static final String FIELD_TABLE_NAME = "table_name";
+    public static final String FIELD_COLUMNS_INFO = "columns_info";
+
     private String databaseName;
     private String tableName;
     private Map<String, ColumnType> columnInfos;

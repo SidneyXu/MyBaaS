@@ -3,6 +3,7 @@ package com.bookislife.flow.data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import org.bson.Document;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -15,6 +16,7 @@ public class MongoDocument extends BaseEntity {
 
     public MongoDocument(Document document) {
         this.document = document;
+        this.data = document;
     }
 
     @JsonCreator
@@ -58,7 +60,7 @@ public class MongoDocument extends BaseEntity {
     }
 
     public Map<String, Object> getData() {
-        return data;
+        return Collections.unmodifiableMap(data);
     }
 
 }

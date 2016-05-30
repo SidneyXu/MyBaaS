@@ -91,6 +91,8 @@ public class MongoDao implements BaseDao {
                             map.put("_id", id);
                         }
                         map.remove("id");
+                    }else if(map.containsKey("id") && map.get("id")==null){
+                        map.remove("id");
                     }
                 }
                 return true;

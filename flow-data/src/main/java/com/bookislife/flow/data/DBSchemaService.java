@@ -8,7 +8,7 @@ public interface DBSchemaService {
     String SCHEMA_DATABASE_NAME = "schema";
     String SCHEMA_TABLE_NAME = "flow_data_schema";
 
-    void insert(BaseSchema schema);
+    String insert(BaseSchema schema);
 
     BaseSchema get(String id);
 

@@ -197,5 +197,6 @@ class TestModule : AbstractModule() {
     override fun configure() {
         bind(MongoDao::class.java)
         bind(MongoDBStorage::class.java)
+        bind(MongoSchemaService::class.java)
     }
 }
