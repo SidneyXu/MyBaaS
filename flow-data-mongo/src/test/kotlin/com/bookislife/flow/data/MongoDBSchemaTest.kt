@@ -55,4 +55,6 @@ class MongoDBSchemaTest {
 
         println(schema?.columnInfos?.values?.iterator()?.next())
     }
+
+
 }
