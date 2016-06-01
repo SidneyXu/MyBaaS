@@ -42,6 +42,7 @@ public class ServerStarter extends AbstractVerticle {
     public void start() throws Exception {
         initConfig();
 
+        // web server
         Router router = Router.router(vertx);
         registerGlobalHandler(router);
         registerResourceHandler(router);
@@ -60,6 +61,11 @@ public class ServerStarter extends AbstractVerticle {
         router.route().handler(middleware.getResponseTimeHandler());
         router.route().handler(middleware.getCookieHandler());
         router.route().handler(middleware.getBodyHandler());
+        // TODO: 16/6/2
+        router.route().handler(middleware.getStaticResourceHandler());
+        router.route().handler(middleware.getRedirectHandler());
+        router.route().handler(middleware.getCrossDomainHandler());
+
     }
 
     private void applyRoute(Route route, ResourceDescriptor cd, ResourceDescriptor md) {

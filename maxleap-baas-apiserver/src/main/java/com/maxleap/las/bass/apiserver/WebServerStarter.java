@@ -7,32 +7,24 @@ import com.maxleap.cerberus.acl.spi.AccessControlService;
 import com.maxleap.cloudcode.job.impl.TaskAcquirer;
 import com.maxleap.code.CloudCodeContants;
 import com.maxleap.code.impl.CloudCodeBootstrap;
-import com.maxleap.domain.LASOrgRole;
-import com.maxleap.domain.LASOrgUser;
-import com.maxleap.domain.LASOrganization;
 import com.maxleap.domain.auth.LASPrincipal;
 import com.maxleap.domain.auth.PermissionType;
-import com.maxleap.domain.base.ObjectId;
 import com.maxleap.exception.LASException;
 import com.maxleap.las.baas.Constants;
-import com.maxleap.las.bass.apiserver.handler.*;
+import com.maxleap.las.bass.apiserver.handler.AccessControlHandler;
+import com.maxleap.las.bass.apiserver.handler.CustomStaticHandler;
+import com.maxleap.las.bass.apiserver.handler.RedirectHandler;
+import com.maxleap.las.bass.apiserver.handler.SomethingAdjustHandler;
 import com.maxleap.las.bass.apiserver.web.JsonStringBuilder;
 import com.maxleap.las.bass.apiserver.web.Resource;
 import com.maxleap.las.bass.apiserver.web.ResourceResolver;
-import com.maxleap.organization.service.OrgRoleService;
-import com.maxleap.organization.service.OrgUserService;
-import com.maxleap.organization.service.OrganizationService;
 import com.maxleap.pandora.config.Funcs;
-import com.maxleap.utils.EncryptUtils;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import io.vertx.ext.web.handler.BodyHandler;
-import io.vertx.ext.web.handler.CookieHandler;
-import io.vertx.ext.web.handler.ResponseTimeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Scheduler;
@@ -98,10 +90,10 @@ public class WebServerStarter extends AbstractVerticle {
   private void registerGlobalHandler(Router mainRouter) {
     // Exception handler
     //----start
-    mainRouter.route().failureHandler(ExceptionHandler.create());
-    mainRouter.route().handler(ResponseTimeHandler.create());
-    mainRouter.route().handler(CookieHandler.create());
-    mainRouter.route().handler(BodyHandler.create());
+//    mainRouter.route().failureHandler(ExceptionHandler.create());
+//    mainRouter.route().handler(ResponseTimeHandler.create());
+//    mainRouter.route().handler(CookieHandler.create());
+//    mainRouter.route().handler(BodyHandler.create());
 
     //---end
 

@@ -1,7 +1,6 @@
 package com.bookislife.flow;
 
-import com.bookislife.flow.handler.ExceptionHandler;
-import com.bookislife.flow.handler.ResponseTimeHandler;
+import com.bookislife.flow.handler.*;
 import io.vertx.rxjava.ext.web.handler.BodyHandler;
 import io.vertx.rxjava.ext.web.handler.CookieHandler;
 
@@ -12,10 +11,15 @@ import javax.inject.Inject;
  */
 public class Middleware {
 
-//    @Inject
     private ExceptionHandler exceptionHandler;
 
     private ResponseTimeHandler responseTimeHandler;
+
+    private StaticResourceHandler staticResourceHandler;
+
+    private CrossDomainHandler crossDomainHandler;
+
+    private RedirectHandler redirectHandler;
 
     @Inject
     public Middleware(ResponseTimeHandler responseTimeHandler) {
@@ -28,6 +32,18 @@ public class Middleware {
 
     public ResponseTimeHandler getResponseTimeHandler() {
         return responseTimeHandler;
+    }
+
+    public StaticResourceHandler getStaticResourceHandler() {
+        return staticResourceHandler;
+    }
+
+    public CrossDomainHandler getCrossDomainHandler() {
+        return crossDomainHandler;
+    }
+
+    public RedirectHandler getRedirectHandler() {
+        return redirectHandler;
     }
 
     public CookieHandler getCookieHandler() {

@@ -14,8 +14,9 @@ public interface Env {
 
     public interface Header {
         String RESPONSE_TIME = "x-flow-response-time";
-        String APPLICATION_ID= "x-flow-application-id";
-
+        String APPLICATION_ID = "x-flow-application-id";
+        String VERSION = "x-flow-version";
+        String SESSION_TOKEN = "x-flow-session-token";
     }
 
     public interface Default {

@@ -98,7 +98,9 @@ public class CustomStaticHandlerImpl implements CustomStaticHandler {
   @Override
   public void handle(RoutingContext context) {
     HttpServerRequest request = context.request();
-    if (request.method() != HttpMethod.GET && request.method() != HttpMethod.HEAD || !staticFileContainer.isMapping(Utils.pathOffset(request.path(), context))) {
+    if (request.method() != HttpMethod.GET
+            && request.method() != HttpMethod.HEAD
+            || !staticFileContainer.isMapping(Utils.pathOffset(request.path(), context))) {
       if (log.isTraceEnabled()) log.trace("Not GET or HEAD so ignoring request");
       context.next();
     } else {
