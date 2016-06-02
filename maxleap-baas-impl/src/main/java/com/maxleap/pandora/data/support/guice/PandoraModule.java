@@ -26,11 +26,12 @@ public class PandoraModule implements Module {
     binder.install(new ConfigModule());
 
     binder.bind(DataDecorator.class);
-    binder.bind(ClassSchemaManager.class).to(ClassSchemaManagerImpl.class);
 
     //------start
     binder.bind(MongoClientFactory.class);
     binder.bind(MongoDao.class);
+    binder.bind(ClassSchemaManager.class).to(ClassSchemaManagerImpl.class);
+    binder.bind(LASOperatorHandler.class);
     //------end
 
     binder.bind(ACLFilter.class);
@@ -39,16 +40,14 @@ public class PandoraModule implements Module {
     binder.bind(ClassSchemaAdjustFilter.class);
     binder.bind(ClassSchemaAdjuster.class);
     binder.bind(DataDecoratorFilter.class);
-    binder.bind(DataValidateFilter.class);
     binder.bind(NativeDataDecoratorFilter.class);
     binder.bind(SchemaBindToFilter.class);
-    binder.bind(TimestampFilter.class);
     binder.bind(MgoFilterChainManager.class).to(DefaultMgoFilterChainManager.class);
 
     binder.bind(LASDataFilterChainManager.class).to(DefaultLASDataFilterChainManager.class);
     binder.bind(MongoEntityManager.class).to(MongoEntityManagerImpl.class);
     binder.bind(LASDataEntityManager.class).to(LASDataEntityManagerImpl.class);
 
-    binder.bind(LASOperatorHandler.class);
+
   }
 }

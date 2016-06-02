@@ -19,5 +19,6 @@ public final class MongoDriver implements Driver {
         binder.bind(MongoContext.class);
         binder.bind(MongoDao.class);
         binder.bind(DBStorage.class).to(MongoDBStorage.class);
+        binder.bind(DBSchemaService.class).to(MongoSchemaService.class);
     }
 }
