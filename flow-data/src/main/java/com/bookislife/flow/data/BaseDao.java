@@ -1,5 +1,6 @@
 package com.bookislife.flow.data;
 
+import com.bookislife.flow.domain.BaseEntity;
 import com.bookislife.flow.exception.FlowException;
 
 import java.util.List;
@@ -14,9 +15,9 @@ public interface BaseDao {
                   BaseEntity entity);
 
     int update(String database,
-                      String tableName,
-                      BaseQuery query,
-                      BaseModifier modifier)throws FlowException;
+               String tableName,
+               BaseQuery query,
+               BaseModifier modifier) throws FlowException;
 
     BaseEntity insertOrUpdate();
 
