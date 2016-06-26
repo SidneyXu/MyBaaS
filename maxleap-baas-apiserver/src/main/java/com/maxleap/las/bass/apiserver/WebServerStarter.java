@@ -52,15 +52,11 @@ public class WebServerStarter extends AbstractVerticle {
   private JsonObject config;
   private Map<Method, Set<PermissionType>> methodPermissionsMap;
 
-  public static void main(String[] args) {
-    Runner.runMod(WebServerStarter.class);
-  }
-
   @Override
   public void start() throws Exception {
     init();
     methodPermissionsMap = new ConcurrentHashMap<>();
-    Funcs.timeMillis(1, c -> startWebServer());
+//    Funcs.timeMillis(1, c -> startWebServer());
     startCloudCode();
   }
 
@@ -76,15 +72,6 @@ public class WebServerStarter extends AbstractVerticle {
     //init guice container
     injector = Guice.createInjector(new GuiceModel(vertx, config));
 
-  }
-
-  private void startWebServer() {
-    final Router mainRouter = Router.router(vertx);
-    registerGlobalHandler(mainRouter);
-    registerResourceHandler(mainRouter);
-    // start a HTTP web server on port 10086
-    vertx.createHttpServer().requestHandler(mainRouter::accept).listen(10086);
-    System.out.println("start web success... listen on 10086");
   }
 
   private void registerGlobalHandler(Router mainRouter) {
@@ -134,7 +121,7 @@ public class WebServerStarter extends AbstractVerticle {
                         try {
                           Method method = m.getMethod();
 
-                          handlePermission(method, ctx.get(Constants.LAS_PRINCIPAL));
+//                          handlePermission(method, ctx.get(Constants.LAS_PRINCIPAL));
 
                           method.invoke(obj, ctx);
                         } catch (Exception e) {
